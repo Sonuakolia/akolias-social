@@ -64,7 +64,11 @@
 </section>
 <section id="chatScreen" class="hide">
 <div class="card row between"><div class="row"><div id="chatAvatar" class="avatar">US</div><div><b id="chatName"></b><div id="chatStatus" class="muted">Offline</div></div></div><div class="row"><button id="reportBtn" class="btn ghost">Report</button><button id="blockBtn" class="btn danger">Block</button></div></div>
-<div id="chatBox" class="chat"></div><div class="row"><input id="messageInput" class="input" placeholder="Message"><button id="sendMsg" class="btn">Send</button></div>
+<div id="chatBox" class="chat"></div>
+<div style="display:flex;gap:10px;align-items:center;position:sticky;bottom:80px;background:#090a0e;padding:12px 0;z-index:40">
+  <input id="messageInput" class="input" placeholder="Type a message..." style="flex:1;margin:0">
+  <button id="sendMsg" class="btn">Send</button>
+</div>
 </section>
 
 <section id="profileScreen" class="hide">
