@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,6 +29,10 @@
 <section id="suspended" class="card hide"><h2>Account suspended</h2><p id="suspendReason"></p><p class="muted">You can submit an appeal from the Appeals screen.</p><button id="logoutSusp" class="btn">Logout</button></section>
 
 <section id="main" class="hide">
+<div class="card row between" style="padding:10px 14px">
+  <div><b>Akolias Social</b><div class="muted" id="topAccount">Logged in</div></div>
+  <button id="logoutBtn" class="btn ghost">Logout</button>
+</div>
 <section id="homeScreen">
 <div class="card"><div class="row between"><h3>Stories</h3><button class="btn ghost" onclick="showScreen('create')">+ Add</button></div><div id="stories" class="stories"></div></div>
 <div id="feed"></div>
@@ -44,7 +49,19 @@
 
 <section id="notificationsScreen" class="hide"><div class="card"><div class="row between"><h3>Notifications</h3><button id="markRead" class="btn ghost">Mark read</button></div><div id="notifications"></div></div></section>
 
-<section id="messagesScreen" class="hide"><div class="card"><h3>Messages</h3><div id="chatUsers"></div></div></section>
+<section id="messagesScreen" class="hide">
+<div class="card">
+  <div class="row between">
+    <div>
+      <h3 style="margin:0">Messages</h3>
+      <div class="muted">Select a user to start chatting</div>
+    </div>
+    <button class="btn ghost" onclick="loadChatUsers()">Refresh</button>
+  </div>
+  <div id="messagesStatus" class="muted" style="margin:10px 0"></div>
+  <div id="chatUsers"></div>
+</div>
+</section>
 <section id="chatScreen" class="hide">
 <div class="card row between"><div class="row"><div id="chatAvatar" class="avatar">US</div><div><b id="chatName"></b><div id="chatStatus" class="muted">Offline</div></div></div><div class="row"><button id="reportBtn" class="btn ghost">Report</button><button id="blockBtn" class="btn danger">Block</button></div></div>
 <div id="chatBox" class="chat"></div><div class="row"><input id="messageInput" class="input" placeholder="Message"><button id="sendMsg" class="btn">Send</button></div>
@@ -74,8 +91,9 @@ $("connect").onclick=()=>{const u=$("url").value.trim(),k=$("key").value.trim();
 $("login").onclick=async()=>{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)return status($("authMsg"),error.message);enter(data.user)}
 $("signup").onclick=async()=>{const {data,error}=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value});if(error)return status($("authMsg"),error.message);if(data.session)enter(data.user);else status($("authMsg"),"Signup complete. Confirm email if required.",true)}
 async function check(){const {data}=await sb.auth.getSession();if(data.session)enter(data.session.user)}
-async function enter(u){me=u;$("setup").classList.add("hide");$("auth").classList.add("hide");const {data:m}=await sb.from("user_moderation").select("is_suspended,suspension_reason").eq("user_id",u.id).maybeSingle();if(m?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=m.suspension_reason||"Suspended by admin";return}$("main").classList.remove("hide");$("nav").classList.remove("hide");await ensureProfile();await startPresence();await Promise.all([loadHome(),loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);showScreen("home")}
+async function enter(u){me=u;$("setup").classList.add("hide");$("auth").classList.add("hide");if($("topAccount"))$("topAccount").textContent=u.email||"Logged in";const {data:m}=await sb.from("user_moderation").select("is_suspended,suspension_reason").eq("user_id",u.id).maybeSingle();if(m?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=m.suspension_reason||"Suspended by admin";return}$("main").classList.remove("hide");$("nav").classList.remove("hide");await ensureProfile();await startPresence();await Promise.all([loadHome(),loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);showScreen("home")}
 $("logoutSusp").onclick=async()=>{await sb.auth.signOut();location.reload()}
+$("logoutBtn").onclick=async()=>{if(presence)await sb.removeChannel(presence);if(chatChannel)await sb.removeChannel(chatChannel);await sb.auth.signOut();location.reload()}
 async function ensureProfile(){const {data}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();if(data){profile=data;return}const base=(me.email||"user").split("@")[0].replace(/[^a-z0-9_]/gi,"").toLowerCase();await sb.from("profiles").insert({id:me.id,full_name:base,username:base+"_"+me.id.slice(0,5)});const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p}
 async function profiles(ids){ids=[...new Set(ids.filter(Boolean))];if(!ids.length)return{};const {data}=await sb.from("profiles").select("id,full_name,username,avatar_url,bio").in("id",ids);return Object.fromEntries((data||[]).map(x=>[x.id,x]))}
 async function startPresence(){presence=sb.channel("online",{config:{presence:{key:me.id}}});presence.on("presence",{event:"sync"},()=>{if(chatUser)updateChatStatus()});await presence.subscribe(async s=>{if(s==="SUBSCRIBED")await presence.track({user_id:me.id,online_at:new Date().toISOString()})})}
@@ -94,10 +112,54 @@ $("peopleSearch").oninput=e=>loadPeople(e.target.value)
 window.follow=async(uid,on)=>{if(on)await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",uid);else await sb.from("follows").insert({follower_id:me.id,following_id:uid});loadPeople($("peopleSearch").value);loadProfile()}
 async function loadNotifications(){const {data}=await sb.from("notifications").select("*").eq("user_id",me.id).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.actor_id));$("notifications").innerHTML=(data||[]).map(n=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b>@${esc(pm[n.actor_id]?.username||"user")}</b> ${esc(n.type)} <span class="muted">${new Date(n.created_at).toLocaleString()}</span></div>`).join("")||"<div class='muted'>No notifications</div>"}
 $("markRead").onclick=async()=>{await sb.from("notifications").update({is_read:true}).eq("user_id",me.id);loadNotifications()}
-async function loadChatUsers(){const {data}=await sb.from("profiles").select("*").neq("id",me.id).limit(50);$("chatUsers").innerHTML=(data||[]).map(u=>`<div class="row between" style="padding:10px 0">${av(u)}<div style="flex:1"><b>${esc(u.full_name)}</b><div class="muted">@${esc(u.username)}</div></div><button class="btn" onclick="openChat('${u.id}')">Open Chat</button></div>`).join("")}
-window.openChat=async uid=>{const {data}=await sb.from("profiles").select("*").eq("id",uid).single();chatUser=data;$("chatName").textContent=data.full_name;$("chatAvatar").innerHTML=data.avatar_url?`<img src="${data.avatar_url}">`:initials(data.full_name);updateChatStatus();showScreen("chat");loadMessages();subscribeChat()}
-async function loadMessages(){const a=me.id,b=chatUser.id;const {data}=await sb.from("messages").select("*").or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`).order("created_at",{ascending:true});$("chatBox").innerHTML=(data||[]).map(m=>`<div class="bubble ${m.sender_id===me.id?"mine":"theirs"}">${esc(m.body)}</div>`).join("");$("chatBox").scrollTop=$("chatBox").scrollHeight}
-$("sendMsg").onclick=async()=>{const body=$("messageInput").value.trim();if(!body)return;const {error}=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,body});if(error)return alert(error.message);$("messageInput").value="";loadMessages()}
+async function loadChatUsers(){
+  $("messagesStatus").textContent="Loading users...";
+  const {data,error}=await sb.from("profiles").select("*").neq("id",me.id).order("created_at",{ascending:false}).limit(50);
+  if(error){
+    $("messagesStatus").textContent="Could not load users: "+error.message;
+    $("chatUsers").innerHTML="";
+    return;
+  }
+  if(!data || data.length===0){
+    $("messagesStatus").textContent="No other user profile yet. Login once with the second account, then come back here and press Refresh.";
+    $("chatUsers").innerHTML="";
+    return;
+  }
+  $("messagesStatus").textContent=data.length+" user(s) available";
+  $("chatUsers").innerHTML=data.map(u=>`<div class="row between" style="padding:12px 0;border-bottom:1px solid var(--line)">${av(u)}<div style="flex:1"><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div><button class="btn" onclick="openChat('${u.id}')">Message</button></div>`).join("");
+}
+window.openChat=async uid=>{
+  const {data,error}=await sb.from("profiles").select("*").eq("id",uid).single();
+  if(error||!data){alert("Could not open chat: "+(error?.message||"User not found"));return}
+  chatUser=data;
+  $("chatName").textContent=data.full_name||"User";
+  $("chatAvatar").innerHTML=data.avatar_url?`<img src="${data.avatar_url}">`:initials(data.full_name);
+  updateChatStatus();
+  showScreen("chat");
+  await loadMessages();
+  subscribeChat();
+}
+async function loadMessages(){
+  const a=me.id,b=chatUser.id;
+  const {data,error}=await sb.from("messages").select("*").or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`).order("created_at",{ascending:true});
+  if(error){$("chatBox").innerHTML=`<div class="err">Chat error: ${esc(error.message)}</div>`;return}
+  $("chatBox").innerHTML=(data||[]).map(m=>`<div class="bubble ${m.sender_id===me.id?"mine":"theirs"}">${esc(m.body ?? m.message ?? "")}<div class="muted" style="font-size:10px;margin-top:4px">${m.created_at?new Date(m.created_at).toLocaleString():""}</div></div>`).join("") || `<div class="muted">No messages yet. Send the first message.</div>`;
+  $("chatBox").scrollTop=$("chatBox").scrollHeight;
+}
+async function sendCurrentMessage(){
+  const text=$("messageInput").value.trim();
+  if(!text||!chatUser)return;
+  let {error}=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,body:text});
+  if(error && /body|column/i.test(error.message||"")){
+    const retry=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,message:text});
+    error=retry.error;
+  }
+  if(error){alert("Message not sent: "+error.message);return}
+  $("messageInput").value="";
+  await loadMessages();
+}
+$("sendMsg").onclick=sendCurrentMessage;
+$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendCurrentMessage()})
 function subscribeChat(){if(chatChannel)sb.removeChannel(chatChannel);chatChannel=sb.channel("chat").on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:`receiver_id=eq.${me.id}`},()=>loadMessages()).subscribe()}
 $("blockBtn").onclick=async()=>{if(!chatUser)return;await sb.from("blocks").insert({blocker_id:me.id,blocked_id:chatUser.id});alert("Blocked");showScreen("people");loadPeople()}
 $("reportBtn").onclick=async()=>{const reason=prompt("Report reason:","spam");if(!reason)return;const {error}=await sb.from("reports").insert({reporter_id:me.id,reported_user_id:chatUser.id,reason,details:"Reported from chat"});alert(error?error.message:"Report submitted")}
