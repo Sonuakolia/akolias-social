@@ -142,7 +142,16 @@ $("publishStory").onclick=async()=>{try{const f=$("storyFile").files[0];if(!f)th
 async function loadPeople(q=""){let x=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())x=x.or(`username.ilike.%${q.trim()}%,full_name.ilike.%${q.trim()}%`);const [{data},{data:f}]=await Promise.all([x,sb.from("follows").select("following_id").eq("follower_id",me.id)]);const set=new Set((f||[]).map(x=>x.following_id));$("people").innerHTML=(data||[]).map(u=>`<div class="row between" style="padding:10px 0">${av(u)}<div style="flex:1"><b>${esc(u.full_name)}</b><div class="muted">@${esc(u.username)}</div></div><button class="btn ${set.has(u.id)?"ghost":""}" onclick="follow('${u.id}',${set.has(u.id)})">${set.has(u.id)?"Following":"Follow"}</button><button class="btn ghost" onclick="openChat('${u.id}')">Message</button></div>`).join("")}
 $("peopleSearch").oninput=e=>loadPeople(e.target.value)
 window.follow=async(uid,on)=>{if(on)await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",uid);else await sb.from("follows").insert({follower_id:me.id,following_id:uid});loadPeople($("peopleSearch").value);loadProfile()}
-async function loadNotifications(){const {data}=await sb.from("notifications").select("*").eq("user_id",me.id).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.actor_id));$("notifications").innerHTML=(data||[]).map(n=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b>@${esc(pm[n.actor_id]?.username||"user")}</b> ${esc(n.type)} <span class="muted">${new Date(n.created_at).toLocaleString()}</span></div>`).join("")||"<div class='muted'>No notifications</div>"}
+async function loadNotifications(){const {data}=await sb.from("notifications").select("*").eq("user_id",me.id).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.actor_id));$("notifications").innerHTML=(data||[]).map(n=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b>@${esc(pm[n.actor_id]?.username||"user")}</b> ${esc(n.type)} <span class="muted">${new Date(n.created_at).toLocaleString("en-IN", {
+  timeZone: "Asia/Kolkata",
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: true
+})}</span></div>`).join("")||"<div class='muted'>No notifications</div>"}
 $("markRead").onclick=async()=>{await sb.from("notifications").update({is_read:true}).eq("user_id",me.id);loadNotifications()}
 async function loadChatUsers(){
   $("messagesStatus").textContent="Loading users...";
