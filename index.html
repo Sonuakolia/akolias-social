@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -98,15 +97,7 @@ textarea{min-height:88px;resize:vertical}.btn{border:0;border-radius:12px;paddin
   <section id="peopleScreen" class="hide">
     <div class="card"><h3>Discover People</h3><input id="peopleSearch" class="input" placeholder="Search username or name"><div id="people"></div></div>
   </section>
-<section id="userProfileScreen" class="hide">
-  <div class="card">
-    <button class="btn ghost" onclick="showScreen('peopleScreen')">← Back</button>
 
-    <div id="viewUserProfile" style="margin-top:15px;"></div>
-
-    <div id="viewUserPosts" style="margin-top:15px;"></div>
-  </div>
-</section>
   <section id="messagesScreen" class="hide">
     <div class="card"><div class="row between"><div><h3 style="margin:0">Messages</h3><div class="muted">Choose a user to chat</div></div><button class="btn ghost" onclick="loadChatUsers()">Refresh</button></div><div id="chatUsers"></div></div>
   </section>
@@ -212,7 +203,7 @@ async function ensureProfile(){
 async function getProfiles(ids){ids=[...new Set(ids.filter(Boolean))];if(!ids.length)return{};const {data}=await sb.from("profiles").select("id,full_name,username,avatar_url,bio").in("id",ids);return Object.fromEntries((data||[]).map(x=>[x.id,x]))}
 
 window.showScreen=name=>{
- ["home","reels","create","people","userProfile","messages","chat","notifications","profile","appeals"].forEach(x=>$(x+"Screen").classList.toggle("hide",x!==name));
+  ["home","reels","create","people","messages","chat","notifications","profile","appeals"].forEach(x=>$(x+"Screen").classList.toggle("hide",x!==name));
   if(name==="home")loadHome();if(name==="reels")loadReels();if(name==="people")loadPeople();if(name==="messages")loadChatUsers();if(name==="notifications")loadNotifications();if(name==="profile")loadProfile();
 };
 
@@ -354,65 +345,8 @@ async function loadPeople(q=""){
   let query=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())query=query.or(`username.ilike.%${q.trim()}%,full_name.ilike.%${q.trim()}%`);
   const [pr,fr,br]=await Promise.all([query,sb.from("follows").select("following_id").eq("follower_id",me.id),sb.from("blocks").select("blocked_id").eq("blocker_id",me.id)]);
   const following=new Set((fr.data||[]).map(x=>x.following_id)),blocked=new Set((br.data||[]).map(x=>x.blocked_id));
-$("people").innerHTML=(pr.data||[]).filter(u=>!blocked.has(u.id)).map(u=>`<div class="userRow row between"><div class="row" style="flex:1;cursor:pointer" onclick="openUserProfile('${u.id}')">${avatarHTML(u)}<div style="flex:1"><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div></div><button class="btn ${following.has(u.id)?"ghost":""}" onclick="toggleFollow('${u.id}',${following.has(u.id)})">${following.has(u.id)?"Following":"Follow"}</button><button class="btn ghost" onclick="openChat('${u.id}')">Message</button></div>`).join("")||`<div class="empty">No users found.</div>`;
-  window.openUserProfile = async (uid) => {
-  const { data: u, error } = await sb
-    .from("profiles")
-    .select("*")
-    .eq("id", uid)
-    .single();
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  const [{ count: postsCount }, { count: followersCount }, { count: followingCount }] =
-    await Promise.all([
-      sb.from("posts").select("*", { count: "exact", head: true }).eq("user_id", uid),
-      sb.from("follows").select("*", { count: "exact", head: true }).eq("following_id", uid),
-      sb.from("follows").select("*", { count: "exact", head: true }).eq("follower_id", uid)
-    ]);
-
-  $("viewUserProfile").innerHTML = `
-    <div class="row">
-      ${avatarHTML(u)}
-      <div>
-        <h2 style="margin:0">${esc(u.full_name || "User")}</h2>
-        <div class="muted">@${esc(u.username || "user")}</div>
-      </div>
-    </div>
-
-    <p>${esc(u.bio || "")}</p>
-
-    <div class="row" style="gap:10px">
-      <div class="card" style="flex:1;text-align:center">
-        <b>${postsCount || 0}</b><br>Posts
-      </div>
-      <div class="card" style="flex:1;text-align:center">
-        <b>${followersCount || 0}</b><br>Followers
-      </div>
-      <div class="card" style="flex:1;text-align:center">
-        <b>${followingCount || 0}</b><br>Following
-      </div>
-    </div>
-  `;
-
-  const { data: posts } = await sb
-    .from("posts")
-    .select("*")
-    .eq("user_id", uid)
-    .order("created_at", { ascending: false });
-
-  $("viewUserPosts").innerHTML = (posts || []).map(p => {
-    if (p.media_type === "video") {
-      return `<video class="media" src="${p.media_url}" controls></video>`;
-    }
-    return `<img class="media" src="${p.media_url}">`;
-  }).join("") || "<div class='muted'>No posts yet.</div>";
-
-  showScreen("userProfile");
-};
+  $("people").innerHTML=(pr.data||[]).filter(u=>!blocked.has(u.id)).map(u=>`<div class="userRow row between">${avatarHTML(u)}<div style="flex:1"><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div><button class="btn ${following.has(u.id)?"ghost":""}" onclick="toggleFollow('${u.id}',${following.has(u.id)})">${following.has(u.id)?"Following":"Follow"}</button><button class="btn ghost" onclick="openChat('${u.id}')">Message</button></div>`).join("")||`<div class="empty">No users found.</div>`;
+}
 $("peopleSearch").oninput=e=>loadPeople(e.target.value);
 window.toggleFollow=async(uid,on)=>{if(on)await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",uid);else{const r=await sb.from("follows").insert({follower_id:me.id,following_id:uid});if(r.error)return alert(r.error.message)}await Promise.all([loadPeople($("peopleSearch").value),loadProfile()])};
 
