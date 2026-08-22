@@ -263,8 +263,43 @@ async function loadReels(){
   $("reels").innerHTML=(data||[]).map(p=>`<div class="reel"><video src="${p.media_url}" controls playsinline loop></video><div class="reelText"><b>@${esc(pm[p.user_id]?.username||"user")}</b><p>${esc(p.caption||"")}</p></div></div>`).join("")||`<div class="card empty">No reels yet.</div>`;
 }
 async function upload(bucket,file){const ext=(file.name.split(".").pop()||"bin").toLowerCase();const path=`${me.id}/${Date.now()}.${ext}`;const {error}=await sb.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
-$("publishPost").onclick=async()=>{try{const f=$("postFile").files[0];if(!f)throw new Error("Choose a photo or video");const url=await upload("posts",f);const {error}=await sb.from("posts").insert({user_id:me.id,caption:$("postCaption").value.trim(),media_url:url,media_type:f.type.startsWith("video/")?"video":"image"});if(error)throw error;setMsg("postMsg","Published ✅",true);$("postFile").value="";$("postCaption").value="";await loadHome()}catch(e){setMsg("postMsg",e.message)}};
-$("publishStory").onclick=async()=>{try{const f=$("storyFile").files[0];if(!f)throw new Error("Choose a photo or video");const url=await upload("stories",f);const {error}=await sb.from("stories").insert({user_id:me.id,caption:$("storyCaption").value.trim(),media_url:url,media_type:f.type.startsWith("video/")?"video":"image"});if(error)throw error;setMsg("storyMsg","Story published ✅",true);$("storyFile").value="";$("storyCaption").value="";await loadStories()}catch(e){setMsg("storyMsg",e.message)}};
+let postPublishing = false;
+
+$("publishPost").onclick = async () => {
+  if (postPublishing) return;
+
+  postPublishing = true;
+  $("publishPost").disabled = true;
+  $("publishPost").textContent = "Publishing...";
+
+  try {
+    const f = $("postFile").files[0];
+    if (!f) throw new Error("Choose a photo or video");
+
+    const url = await upload("posts", f);
+
+    const { error } = await sb.from("posts").insert({
+      user_id: me.id,
+      caption: $("postCaption").value.trim(),
+      media_url: url,
+      media_type: f.type.startsWith("video/") ? "video" : "image"
+    });
+
+    if (error) throw error;
+
+    status($("postMsg"), "Published ✅", true);
+    $("postFile").value = "";
+    $("postCaption").value = "";
+    await loadHome();
+
+  } catch (e) {
+    status($("postMsg"), e.message);
+  } finally {
+    postPublishing = false;
+    $("publishPost").disabled = false;
+    $("publishPost").textContent = "Publish Post";
+  }
+};
 
 async function loadPeople(q=""){
   let query=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())query=query.or(`username.ilike.%${q.trim()}%,full_name.ilike.%${q.trim()}%`);
