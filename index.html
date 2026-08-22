@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,40 +9,23 @@
 <style>
 :root{--bg:#090b10;--panel:#141820;--panel2:#0f1218;--line:#2a303b;--text:#fff;--muted:#9da7b5;--a:#ff3d81;--b:#7b4dff;--ok:#65dfa9;--bad:#ff7c86}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}button,input,textarea,select{font:inherit}
-body{min-height:100vh}.shell{max-width:1080px;margin:auto;padding:14px 14px 92px}
-.brand{font-weight:900;font-size:28px;text-align:center;margin:8px 0 16px;background:linear-gradient(90deg,#ff9b24,var(--a),var(--b));-webkit-background-clip:text;color:transparent}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
-.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.hide{display:none!important}
-.input,textarea,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:white;border-radius:12px;padding:12px;margin:6px 0}
-textarea{min-height:88px;resize:vertical}.btn{border:0;border-radius:12px;padding:10px 13px;color:white;font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));cursor:pointer}
-.ghost{background:#252a35}.danger{background:#6b252d}.good{background:#1d5c45}.muted{color:var(--muted);font-size:13px}.err{color:var(--bad)}.ok{color:var(--ok)}
-.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--a),var(--b));overflow:hidden;flex:none}
-.avatar img{width:100%;height:100%;object-fit:cover}.stories{display:flex;gap:12px;overflow:auto;padding:2px 0 8px}.story{min-width:72px;text-align:center;font-size:11px;cursor:pointer}
-.story .avatar{width:62px;height:62px;margin:auto auto 5px;border:3px solid var(--a)}.post{padding:0;overflow:hidden}.postHead{padding:13px}.media{width:100%;max-height:720px;object-fit:cover;background:#080a0d}
-.actions{display:flex;gap:10px;align-items:center;padding:10px 13px}.actions button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;padding:3px 5px}
-.caption{padding:0 13px 13px;line-height:1.45}.comments{padding:0 13px 13px}.comment{padding:4px 0;font-size:14px}.commentForm{display:flex;gap:8px;padding:0 13px 13px}
-.commentForm input{margin:0}.reel{height:74vh;min-height:520px;background:#040506;border-radius:20px;overflow:hidden;position:relative;margin-bottom:18px;border:1px solid var(--line)}
-.reel video{width:100%;height:100%;object-fit:cover}.reelText{position:absolute;left:0;right:0;bottom:0;padding:22px;background:linear-gradient(transparent,rgba(0,0,0,.86))}
+body{min-height:100vh}body.light{--bg:#f7f7f9;--panel:#fff;--panel2:#f0f2f5;--line:#d8dde6;--text:#111;--muted:#667085}
+.shell{max-width:1120px;margin:auto;padding:14px 14px 108px}.brand{font-weight:900;font-size:30px;text-align:center;margin:8px 0 16px;background:linear-gradient(90deg,#ff9b24,var(--a),var(--b));-webkit-background-clip:text;color:transparent}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.hide{display:none!important}
+.input,textarea,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:12px;margin:6px 0}textarea{min-height:90px}
+.btn{border:0;border-radius:12px;padding:10px 13px;color:#fff;font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));cursor:pointer}.ghost{background:#252a35}.danger{background:#6b252d}.good{background:#1d5c45}.muted{color:var(--muted);font-size:13px}.ok{color:var(--ok)}.err{color:var(--bad)}
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--a),var(--b));overflow:hidden;flex:none}.avatar img{width:100%;height:100%;object-fit:cover}.avatar.lg{width:88px;height:88px}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:9px;width:min(1060px,calc(100% - 18px));background:#11151c;border:1px solid var(--line);border-radius:16px;padding:8px;display:flex;justify-content:space-around;z-index:50}.nav button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;min-width:44px}
+.stories{display:flex;gap:12px;overflow:auto;padding:4px 0 8px}.story{min-width:72px;text-align:center;font-size:11px;cursor:pointer}.story .avatar{width:62px;height:62px;margin:auto auto 5px;border:3px solid var(--a)}
+.post{padding:0;overflow:hidden}.postHead{padding:13px}.media{width:100%;max-height:720px;object-fit:cover;background:#080a0d}.actions{display:flex;gap:10px;align-items:center;padding:10px 13px}.actions button{background:none;border:0;color:var(--text);font-size:22px;cursor:pointer}.caption,.comments{padding:0 13px 13px}.comment{padding:4px 0}.commentForm{display:flex;gap:8px;padding:0 13px 13px}.commentForm input{margin:0}
+.reel{height:74vh;min-height:520px;background:#040506;border-radius:20px;overflow:hidden;position:relative;margin-bottom:18px;border:1px solid var(--line)}.reel video{width:100%;height:100%;object-fit:cover}.reelText{position:absolute;left:0;right:0;bottom:0;padding:22px;background:linear-gradient(transparent,rgba(0,0,0,.86))}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.tile{aspect-ratio:1;background:#11151c;overflow:hidden}.tile img,.tile video{width:100%;height:100%;object-fit:cover}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.stat{background:var(--panel2);padding:12px;border-radius:12px;text-align:center}.stat b{display:block;font-size:20px}
-.userRow{padding:11px 0;border-bottom:1px solid var(--line)}.chat{height:52vh;min-height:380px;overflow:auto;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:12px}
-.bubble{max-width:78%;padding:10px 12px;border-radius:14px;margin:8px 0;line-height:1.4}.mine{margin-left:auto;background:linear-gradient(135deg,var(--a),var(--b))}.theirs{background:#252a35}
-.time{font-size:10px;opacity:.75;margin-top:4px}.chatbar{display:flex;gap:8px;position:sticky;bottom:78px;background:var(--bg);padding:10px 0;z-index:10}.chatbar input{margin:0}
-.notification{padding:12px 0;border-bottom:1px solid var(--line)}.badge{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--a);font-size:11px}
-.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:9px;width:min(1020px,calc(100% - 18px));background:#11151c;border:1px solid var(--line);border-radius:16px;padding:8px;display:flex;justify-content:space-around;z-index:50}
-.nav button{background:none;border:0;color:white;font-size:22px;cursor:pointer;position:relative}.empty{text-align:center;color:var(--muted);padding:26px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:16px;z-index:100}.modalBox{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
-@media(max-width:700px){.shell{padding:10px 10px 90px}.brand{font-size:23px}.nav{overflow-x:auto;justify-content:space-between}.nav button{min-width:44px}}
-/* Mobile bottom navigation spacing */
-@media (max-width: 600px) {
-  body {
-    padding-bottom: 90px;
-  }
-
-  .bottomNav {
-    bottom: 10px;
-  }
-}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.stat{background:var(--panel2);padding:12px;border-radius:12px;text-align:center;cursor:pointer}.stat b{display:block;font-size:20px}
+.userRow,.notification,.settingItem,.activityItem{padding:11px 0;border-bottom:1px solid var(--line)}.clickable{cursor:pointer}
+.chat{height:52vh;min-height:380px;overflow:auto;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:12px}.bubble{max-width:78%;padding:10px 12px;border-radius:14px;margin:8px 0}.mine{margin-left:auto;background:linear-gradient(135deg,var(--a),var(--b));color:#fff}.theirs{background:#252a35}.chatbar{display:flex;gap:8px;position:sticky;bottom:78px;background:var(--bg);padding:10px 0;z-index:10}.chatbar input{margin:0}
+.menuGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.menuBtn{padding:16px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:14px;text-align:left;cursor:pointer}.menuBtn b{display:block;margin-bottom:4px}.pill{padding:4px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:12px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:16px;z-index:100}.modalBox{width:min(600px,100%);max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+@media(max-width:700px){.shell{padding:10px 10px 110px}.brand{font-size:23px}.nav{overflow-x:auto;justify-content:space-between}.menuGrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -59,341 +41,140 @@ textarea{min-height:88px;resize:vertical}.btn{border:0;border-radius:12px;paddin
 <section id="suspended" class="card hide">
   <h2>Account suspended</h2>
   <p id="suspendReason"></p>
-  <button id="suspendedLogout" class="btn">Logout</button>
+  <div class="row wrap">
+    <button class="btn ghost" onclick="showScreen('support')">Contact Support</button>
+    <button id="suspendedLogout" class="btn">Logout</button>
+  </div>
 </section>
 
 <section id="app" class="hide">
   <div class="card row between wrap">
-    <div class="row"><div id="topAvatar" class="avatar">AS</div><div><b id="topName">User</b><div id="topEmail" class="muted"></div></div></div>
-    <div class="row"><a href="admin.html" class="btn ghost" style="text-decoration:none">Admin</a><button id="logoutBtn" class="btn ghost">Logout</button></div>
+    <div class="row clickable" onclick="showScreen('profile')"><div id="topAvatar" class="avatar">AS</div><div><b id="topName">User</b><div id="topEmail" class="muted"></div></div></div>
+    <div class="row">
+      <a href="creator.html" class="btn ghost" style="text-decoration:none">Creator</a>
+      <a href="admin.html" class="btn ghost" style="text-decoration:none">Admin</a>
+      <button class="btn ghost" onclick="showScreen('settings')">☰</button>
+      <button id="logoutBtn" class="btn ghost">Logout</button>
+    </div>
   </div>
 
   <section id="homeScreen">
-    <div class="card">
-      <div class="row between"><h3 style="margin:0">Stories</h3><button class="btn ghost" onclick="showScreen('create')">+ Add</button></div>
-      <div id="stories" class="stories"></div>
-    </div>
+    <div class="card"><div class="row between"><h3 style="margin:0">Stories</h3><button class="btn ghost" onclick="showScreen('create')">+ Add</button></div><div id="stories" class="stories"></div></div>
     <div id="feed"></div>
   </section>
 
   <section id="reelsScreen" class="hide"><h3>Reels</h3><div id="reels"></div></section>
 
   <section id="createScreen" class="hide">
-    <div class="card">
-      <h3>Create Post</h3>
-      <input id="postFile" class="input" type="file" accept="image/*,video/*">
-      <textarea id="postCaption" placeholder="Write a caption..."></textarea>
-      <button id="publishPost" class="btn">Publish Post</button>
-      <div id="postMsg" class="muted"></div>
-    </div>
-    <div class="card">
-      <h3>Create Story</h3>
-      <input id="storyFile" class="input" type="file" accept="image/*,video/*">
-      <textarea id="storyCaption" placeholder="Story caption..."></textarea>
-      <button id="publishStory" class="btn">Publish Story</button>
-      <div id="storyMsg" class="muted"></div>
-    </div>
+    <div class="card"><h3>Create Post</h3><input id="postFile" class="input" type="file" accept="image/*,video/*" multiple><textarea id="postCaption" placeholder="Caption, #hashtags, @mentions"></textarea><input id="postLocation" class="input" placeholder="Location (optional)"><button id="publishPost" class="btn">Publish Post</button><div id="postMsg" class="muted"></div></div>
+    <div class="card"><h3>Create Story</h3><input id="storyFile" class="input" type="file" accept="image/*,video/*"><textarea id="storyCaption" placeholder="Story caption"></textarea><button id="publishStory" class="btn">Publish Story</button><div id="storyMsg" class="muted"></div></div>
   </section>
 
-  <section id="peopleScreen" class="hide">
-    <div class="card"><h3>Discover People</h3><input id="peopleSearch" class="input" placeholder="Search username or name"><div id="people"></div></div>
-  </section>
+  <section id="peopleScreen" class="hide"><div class="card"><h3>Search & Explore</h3><input id="peopleSearch" class="input" placeholder="Search username or name"><div id="people"></div></div></section>
 
-  <section id="messagesScreen" class="hide">
-    <div class="card"><div class="row between"><div><h3 style="margin:0">Messages</h3><div class="muted">Choose a user to chat</div></div><button class="btn ghost" onclick="loadChatUsers()">Refresh</button></div><div id="chatUsers"></div></div>
-  </section>
+  <section id="userProfileScreen" class="hide"><div class="card"><button class="btn ghost" onclick="showScreen('people')">← Back</button><div id="viewUserProfile" style="margin-top:15px"></div><div id="viewUserPosts" class="grid" style="margin-top:15px"></div></div></section>
 
-  <section id="chatScreen" class="hide">
-    <div class="card row between wrap">
-      <div class="row"><div id="chatAvatar" class="avatar">US</div><div><b id="chatName">User</b><div id="chatStatus" class="muted">Offline</div></div></div>
-      <div class="row"><button id="reportBtn" class="btn ghost">Report</button><button id="blockBtn" class="btn danger">Block</button></div>
-    </div>
-    <div id="chatBox" class="chat"></div>
-    <div class="chatbar"><input id="messageInput" class="input" placeholder="Type a message..."><button id="sendMsg" class="btn">Send</button></div>
-  </section>
+  <section id="messagesScreen" class="hide"><div class="card"><h3>Messages</h3><div id="chatUsers"></div></div></section>
+  <section id="chatScreen" class="hide"><div class="card row between wrap"><div class="row clickable" id="chatHeaderProfile"><div id="chatAvatar" class="avatar">US</div><div><b id="chatName">User</b><div id="chatStatus" class="muted">Offline</div></div></div><div class="row"><button id="shareChatUserBtn" class="btn ghost">Share ID</button><button id="reportBtn" class="btn ghost">Report</button><button id="blockBtn" class="btn danger">Block</button></div></div><div id="chatBox" class="chat"></div><div class="chatbar"><input id="messageInput" class="input" placeholder="Type a message..."><button id="sendMsg" class="btn">Send</button></div></section>
 
-  <section id="notificationsScreen" class="hide">
-    <div class="card"><div class="row between"><h3 style="margin:0">Notifications</h3><button id="markRead" class="btn ghost">Mark all read</button></div><div id="notifications"></div></div>
-  </section>
+  <section id="notificationsScreen" class="hide"><div class="card"><div class="row between"><h3 style="margin:0">Notifications</h3><button id="markRead" class="btn ghost">Mark all read</button></div><div id="notifications"></div></div></section>
 
   <section id="profileScreen" class="hide">
     <div class="card">
-      <div class="row"><div id="myAvatar" class="avatar" style="width:86px;height:86px">AS</div><div><h2 id="myName" style="margin:0"></h2><div id="myUsername" class="muted"></div></div></div>
-      <p id="myBio"></p>
-      <div class="stats"><div class="stat"><b id="postsCount">0</b>Posts</div><div class="stat"><b id="followersCount">0</b>Followers</div><div class="stat"><b id="followingCount">0</b>Following</div></div>
-      <button class="btn" onclick="document.getElementById('editProfile').classList.toggle('hide')">Edit Profile</button>
+      <div class="row"><div id="myAvatar" class="avatar lg">AS</div><div><h2 id="myName" style="margin:0"></h2><div id="myUsername" class="muted"></div><div id="verifiedBadge"></div></div></div>
+      <p id="myBio"></p><div id="myLink" class="muted"></div>
+      <div class="stats"><div class="stat"><b id="postsCount">0</b>Posts</div><div class="stat" onclick="openFollowList('followers')"><b id="followersCount">0</b>Followers</div><div class="stat" onclick="openFollowList('following')"><b id="followingCount">0</b>Following</div></div>
+      <div class="row wrap"><button class="btn" onclick="$('editProfile').classList.toggle('hide')">Edit Profile</button><button class="btn ghost" onclick="shareProfile(me.id)">Share Profile</button><button class="btn ghost" onclick="showScreen('activity')">Activity</button><button class="btn ghost" onclick="showScreen('settings')">Settings</button></div>
     </div>
-    <div id="editProfile" class="card hide">
-      <input id="fullName" class="input" placeholder="Full name">
-      <input id="username" class="input" placeholder="Username">
-      <textarea id="bio" placeholder="Bio"></textarea>
-      <input id="avatarFile" class="input" type="file" accept="image/*">
-      <button id="saveProfile" class="btn">Save Profile</button>
-    </div>
+    <div id="editProfile" class="card hide"><input id="fullName" class="input" placeholder="Full name"><input id="username" class="input" placeholder="Username"><textarea id="bio" placeholder="Bio"></textarea><input id="website" class="input" placeholder="Website/link"><input id="location" class="input" placeholder="Location"><select id="profileType"><option value="personal">Personal</option><option value="creator">Creator</option><option value="business">Business</option></select><input id="avatarFile" class="input" type="file" accept="image/*"><button id="saveProfile" class="btn">Save Profile</button></div>
     <div class="card"><div id="myGrid" class="grid"></div></div>
   </section>
 
-  <section id="appealsScreen" class="hide">
-    <div class="card"><h3>Appeals</h3><textarea id="appealText" placeholder="Explain your appeal..."></textarea><button id="sendAppeal" class="btn">Submit Appeal</button><div id="appeals"></div></div>
+  <section id="savedScreen" class="hide"><div class="card"><h3>Saved / Collections</h3><div id="savedPosts"></div></div></section>
+  <section id="activityScreen" class="hide"><div class="card"><h3>Your Activity</h3><div class="menuGrid"><button class="menuBtn" onclick="loadActivity('likes')"><b>❤️ Likes</b><span class="muted">Like history</span></button><button class="menuBtn" onclick="loadActivity('comments')"><b>💬 Comments</b><span class="muted">Comment history</span></button><button class="menuBtn" onclick="loadActivity('following')"><b>👥 Following</b><span class="muted">Follow history</span></button><button class="menuBtn" onclick="loadActivity('notifications')"><b>🔔 Notifications</b><span class="muted">Recent activity</span></button></div><div id="activityContent" style="margin-top:14px"></div></div></section>
+
+  <section id="settingsScreen" class="hide">
+    <div class="card"><h3>Settings & Activity</h3>
+      <div class="settingItem row between"><div><b>Appearance</b><div class="muted">Dark / Light</div></div><button id="themeBtn" class="btn ghost">Toggle</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showScreen('saved')">🔖 Saved posts</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showBlockedUsers()">🚫 Blocked accounts</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showScreen('activity')">📊 Your activity</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showScreen('support')">🎧 Customer Support</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showScreen('privacy')">🔒 Privacy</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showScreen('legal')">📜 Legal</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="shareProfile(me.id)">🔗 Share profile</button></div>
+      <div class="settingItem"><button class="btn ghost" onclick="showScreen('appeals')">⚖️ Appeals</button></div>
+      <div class="settingItem"><button class="btn danger" onclick="logout()">Logout</button></div>
+    </div>
   </section>
+
+  <section id="privacyScreen" class="hide"><div class="card"><h3>Privacy</h3><div class="settingItem row between"><div><b>Account privacy</b><div class="muted">Public / Private</div></div><select id="privacySelect" style="width:auto"><option value="public">Public</option><option value="private">Private</option></select></div><div class="settingItem"><span class="muted">Private follow requests, story visibility, mention/tag permissions and message permissions are database-ready in the supplied SQL.</span></div></div></section>
+
+  <section id="supportScreen" class="hide"><div class="card"><h3>Help Centre & Customer Support</h3><div class="menuGrid"><button class="menuBtn" onclick="showFaq()"><b>❓ FAQ</b><span class="muted">Common questions</span></button><button class="menuBtn" onclick="createTicket()"><b>🎫 Raise Ticket</b><span class="muted">Create support ticket</span></button><a class="menuBtn" href="mailto:support@akolias.social" style="text-decoration:none;color:var(--text)"><b>✉️ Email Support</b><span class="muted">Open email</span></a><button class="menuBtn" onclick="showMyTickets()"><b>📋 My Tickets</b><span class="muted">Track status</span></button></div><textarea id="supportIssue" placeholder="Describe your issue..."></textarea><div id="supportArea" style="margin-top:12px"></div></div></section>
+
+  <section id="appealsScreen" class="hide"><div class="card"><h3>Appeals</h3><textarea id="appealText" placeholder="Explain your appeal..."></textarea><button id="sendAppeal" class="btn">Submit Appeal</button><div id="appeals"></div></div></section>
+
+  <section id="legalScreen" class="hide"><div class="card"><h3>Legal</h3><div class="menuGrid"><a class="menuBtn" href="terms.html"><b>Terms & Conditions</b></a><a class="menuBtn" href="privacy.html"><b>Privacy Policy</b></a><a class="menuBtn" href="community.html"><b>Community Guidelines</b></a><a class="menuBtn" href="deletion.html"><b>Account Deletion</b></a></div></div></section>
 </section>
 </div>
 
-<nav id="nav" class="nav hide">
-<button onclick="showScreen('home')">🏠</button>
-<button onclick="showScreen('reels')">🎬</button>
-<button onclick="showScreen('create')">➕</button>
-<button onclick="showScreen('people')">🔎</button>
-<button onclick="showScreen('messages')">💬</button>
-<button onclick="showScreen('notifications')">🔔<span id="notifBadge" class="badge hide">0</span></button>
-<button onclick="showScreen('profile')">👤</button>
-</nav>
-
-<div id="storyModal" class="modal hide"><div class="modalBox"><div class="row between"><b>Story</b><button class="btn ghost" onclick="closeStory()">Close</button></div><div id="storyContent" style="margin-top:12px;text-align:center"></div></div></div>
+<nav id="nav" class="nav hide"><button onclick="showScreen('home')">🏠</button><button onclick="showScreen('reels')">🎬</button><button onclick="showScreen('create')">➕</button><button onclick="showScreen('people')">🔎</button><button onclick="showScreen('messages')">💬</button><button onclick="showScreen('notifications')">🔔</button><button onclick="showScreen('profile')">👤</button></nav>
+<div id="modal" class="modal hide"><div class="modalBox"><div class="row between"><b id="modalTitle">Details</b><button class="btn ghost" onclick="closeModal()">Close</button></div><div id="modalContent" style="margin-top:12px"></div></div></div>
 
 <script>
-const SUPABASE_URL="https://mhjtlxxgeepmbxeoravu.supabase.co";
-const SUPABASE_KEY="sb_publishable_gHUxa_Mrg3UKzhjq9Rr30g_45Mqfex6";
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const sb=window.supabase.createClient("https://mhjtlxxgeepmbxeoravu.supabase.co","sb_publishable_gHUxa_Mrg3UKzhjq9Rr30g_45Mqfex6");
 let me=null,profile=null,chatUser=null,presence=null,chatChannel=null,notificationChannel=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 const initials=n=>(n||"User").split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
 const indiaTime=t=>new Date(t).toLocaleString("en-IN",{timeZone:"Asia/Kolkata",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});
-function setMsg(id,text,ok=false){$(id).textContent=text;$(id).className=ok?"ok":"err"}
-function avatarHTML(p){return p?.avatar_url?`<div class="avatar"><img src="${p.avatar_url}"></div>`:`<div class="avatar">${initials(p?.full_name)}</div>`}
+const savedIds=()=>JSON.parse(localStorage.getItem("AKOLIAS_SAVED")||"[]"); const saveIds=v=>localStorage.setItem("AKOLIAS_SAVED",JSON.stringify([...new Set(v)]));
+function avatarHTML(p,cls=""){return p?.avatar_url?`<div class="avatar ${cls}"><img src="${p.avatar_url}"></div>`:`<div class="avatar ${cls}">${initials(p?.full_name)}</div>`}
+function setMsg(id,t,ok=false){$(id).textContent=t;$(id).className=ok?"ok":"err"}
+function openModal(t,h){$("modalTitle").textContent=t;$("modalContent").innerHTML=h;$("modal").classList.remove("hide")} window.closeModal=()=> $("modal").classList.add("hide");
 
-async function boot(){
-  const {data}=await sb.auth.getSession();
-  if(data.session) await enter(data.session.user);
-}
-$("googleLoginBtn").onclick=async()=>{
-  const {error}=await sb.auth.signInWithOAuth({
-    provider:"google",
-    options:{
-      redirectTo:"https://sonuakolia.github.io/akolias-social/"
-    }
-  });
-  if(error) setMsg("authMsg",error.message);
-};
-async function logout(){if(presence)await sb.removeChannel(presence);if(chatChannel)await sb.removeChannel(chatChannel);if(notificationChannel)await sb.removeChannel(notificationChannel);await sb.auth.signOut();location.reload()}
+$("googleLoginBtn").onclick=async()=>{const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:"https://sonuakolia.github.io/akolias-social/"}});if(error)setMsg("authMsg",error.message)};
+async function logout(){if(presence)await sb.removeChannel(presence);if(chatChannel)await sb.removeChannel(chatChannel);if(notificationChannel)await sb.removeChannel(notificationChannel);await sb.auth.signOut();location.href="https://sonuakolia.github.io/akolias-social/"} window.logout=logout;
 $("logoutBtn").onclick=logout;$("suspendedLogout").onclick=logout;
 
-async function enter(user){
-  me=user;$("auth").classList.add("hide");
-  const {data:mod}=await sb.from("user_moderation").select("is_suspended,suspension_reason").eq("user_id",me.id).maybeSingle();
-  if(mod?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=mod.suspension_reason||"Suspended by admin";return}
-  $("app").classList.remove("hide");$("nav").classList.remove("hide");
-  await ensureProfile();await startPresence();subscribeNotifications();
-  await Promise.all([loadHome(),loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);
-  showScreen("home");
-}
+async function boot(){applyTheme();const {data}=await sb.auth.getSession();if(data.session)await enter(data.session.user)}
+async function enter(u){me=u;$("auth").classList.add("hide");const {data:m}=await sb.from("user_moderation").select("*").eq("user_id",me.id).maybeSingle();if(m?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=m.suspension_reason||"Suspended";return}$("app").classList.remove("hide");$("nav").classList.remove("hide");await ensureProfile();await startPresence();subscribeNotifications();await Promise.all([loadHome(),loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);showScreen("home")}
+async function ensureProfile(){let {data}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();if(!data){const b=(me.email||"user").split("@")[0].replace(/[^a-z0-9_]/gi,"").toLowerCase();const meta=me.user_metadata||{};await sb.from("profiles").insert({id:me.id,full_name:meta.full_name||meta.name||b,username:b+"_"+me.id.slice(0,5),avatar_url:meta.avatar_url||meta.picture||null});const r=await sb.from("profiles").select("*").eq("id",me.id).single();data=r.data}profile=data;$("topName").textContent=data.full_name||"User";$("topEmail").textContent=me.email||"";$("topAvatar").innerHTML=data.avatar_url?`<img src="${data.avatar_url}">`:initials(data.full_name)}
+async function getProfiles(ids){ids=[...new Set(ids.filter(Boolean))];if(!ids.length)return{};const {data}=await sb.from("profiles").select("*").in("id",ids);return Object.fromEntries((data||[]).map(x=>[x.id,x]))}
 
-async function ensureProfile(){
-  let {data}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();
-  if(!data){
-    const base=(me.email||"user").split("@")[0].replace(/[^a-z0-9_]/gi,"").toLowerCase();
-    const username=base+"_"+me.id.slice(0,5);
-    await sb.from("profiles").insert({id:me.id,full_name:base,username});
-    const r=await sb.from("profiles").select("*").eq("id",me.id).single();data=r.data;
-  }
-  profile=data;
-  $("topName").textContent=profile.full_name||"User";$("topEmail").textContent=me.email||"";
-  $("topAvatar").innerHTML=profile.avatar_url?`<img src="${profile.avatar_url}">`:initials(profile.full_name);
-}
-async function getProfiles(ids){ids=[...new Set(ids.filter(Boolean))];if(!ids.length)return{};const {data}=await sb.from("profiles").select("id,full_name,username,avatar_url,bio").in("id",ids);return Object.fromEntries((data||[]).map(x=>[x.id,x]))}
+window.showScreen=n=>{["home","reels","create","people","userProfile","messages","chat","notifications","profile","saved","activity","settings","privacy","support","appeals","legal"].forEach(x=>{const e=$(x+"Screen");if(e)e.classList.toggle("hide",x!==n)});if(n==="home")loadHome();if(n==="people")loadPeople();if(n==="messages")loadChatUsers();if(n==="notifications")loadNotifications();if(n==="profile")loadProfile();if(n==="saved")loadSaved()};
 
-window.showScreen=name=>{
-  ["home","reels","create","people","messages","chat","notifications","profile","appeals"].forEach(x=>$(x+"Screen").classList.toggle("hide",x!==name));
-  if(name==="home")loadHome();if(name==="reels")loadReels();if(name==="people")loadPeople();if(name==="messages")loadChatUsers();if(name==="notifications")loadNotifications();if(name==="profile")loadProfile();
-};
+async function startPresence(){presence=sb.channel("online",{config:{presence:{key:me.id}}});presence.on("presence",{event:"sync"},()=>{if(chatUser)updateChatStatus()});await presence.subscribe(async s=>{if(s==="SUBSCRIBED")await presence.track({user_id:me.id})})} function isOnline(id){return Object.values(presence?.presenceState?.()||{}).flat().some(x=>x.user_id===id)} function updateChatStatus(){if(chatUser)$("chatStatus").textContent=isOnline(chatUser.id)?"Online":"Offline"}
 
-async function startPresence(){
-  presence=sb.channel("akolias-online",{config:{presence:{key:me.id}}});
-  presence.on("presence",{event:"sync"},()=>{if(chatUser)updateChatStatus()});
-  await presence.subscribe(async s=>{if(s==="SUBSCRIBED")await presence.track({user_id:me.id,online_at:new Date().toISOString()})});
-}
-function isOnline(uid){return Object.values(presence?.presenceState?.()||{}).flat().some(x=>x.user_id===uid)}
-function updateChatStatus(){if(!chatUser)return;$("chatStatus").textContent=isOnline(chatUser.id)?"Online":"Offline";$("chatStatus").style.color=isOnline(chatUser.id)?"var(--ok)":"var(--muted)"}
+async function loadStories(){const cut=new Date(Date.now()-86400000).toISOString();const {data}=await sb.from("stories").select("*").gte("created_at",cut).order("created_at",{ascending:false});const pm=await getProfiles((data||[]).map(x=>x.user_id));$("stories").innerHTML=(data||[]).map(s=>`<div class="story" onclick="openModal('Story','${s.media_type==="video"?`<video src="${s.media_url}" controls autoplay style="max-width:100%"></video>`:`<img src="${s.media_url}" style="max-width:100%">`}<p>${esc(s.caption||"")}</p>')">${avatarHTML(pm[s.user_id])}@${esc(pm[s.user_id]?.username||"user")}</div>`).join("")||"<span class='muted'>No stories yet.</span>"}
 
-async function loadStories(){
-  const cutoff=new Date(Date.now()-86400000).toISOString();
-  const {data,error}=await sb.from("stories").select("*").gte("created_at",cutoff).order("created_at",{ascending:false});
-  if(error){$("stories").innerHTML=`<span class="err">${esc(error.message)}</span>`;return}
-  const pm=await getProfiles((data||[]).map(s=>s.user_id));window._stories=data||[];
-  $("stories").innerHTML=(data||[]).map(s=>`<div class="story" onclick="openStory('${s.id}')">${avatarHTML(pm[s.user_id])}@${esc(pm[s.user_id]?.username||"user")}</div>`).join("")||`<span class="muted">No stories yet.</span>`;
-}
-window.openStory=id=>{const s=(window._stories||[]).find(x=>x.id===id);if(!s)return;const media=s.media_type==="video"?`<video src="${s.media_url}" controls autoplay style="max-width:100%;max-height:68vh"></video>`:`<img src="${s.media_url}" style="max-width:100%;max-height:68vh">`;$("storyContent").innerHTML=media+`<p>${esc(s.caption||"")}</p>`;$("storyModal").classList.remove("hide")};
-window.closeStory=()=>$("storyModal").classList.add("hide");
+async function loadHome(){const {data:f}=await sb.from("follows").select("following_id").eq("follower_id",me.id);const ids=[me.id,...(f||[]).map(x=>x.following_id)];const {data:posts}=await sb.from("posts").select("*").in("user_id",ids).order("created_at",{ascending:false}).limit(50);const pm=await getProfiles((posts||[]).map(p=>p.user_id));const pids=(posts||[]).map(p=>p.id);let comments=[],likes=[];if(pids.length){const [c,l]=await Promise.all([sb.from("comments").select("*").in("post_id",pids),sb.from("likes").select("*").in("post_id",pids)]);comments=c.data||[];likes=l.data||[]}const cpm=await getProfiles(comments.map(c=>c.user_id));$("feed").innerHTML=(posts||[]).map(p=>{const ps=likes.filter(x=>x.post_id===p.id),liked=ps.some(x=>x.user_id===me.id),cs=comments.filter(x=>x.post_id===p.id);return `<article class="card post"><div class="postHead row clickable" onclick="openUserProfile('${p.user_id}')">${avatarHTML(pm[p.user_id])}<div><b>${esc(pm[p.user_id]?.full_name||"User")}</b><div class="muted">@${esc(pm[p.user_id]?.username||"user")} · ${indiaTime(p.created_at)}</div></div></div>${p.media_type==="video"?`<video class="media" src="${p.media_url}" controls></video>`:`<img class="media" src="${p.media_url}">`}<div class="actions"><button onclick="toggleLike('${p.id}')">${liked?"♥":"♡"}</button><span class="muted">${ps.length}</span><button onclick="$('comment-${p.id}').focus()">💬</button><button onclick="toggleSave('${p.id}')">🔖</button><button onclick="sharePost('${p.id}')">↗</button></div><div class="caption">${esc(p.caption||"")}</div><div class="comments">${cs.map(c=>`<div class="comment"><b>@${esc(cpm[c.user_id]?.username||"user")}</b> ${esc(c.body||"")}</div>`).join("")}</div><div class="commentForm"><input id="comment-${p.id}" class="input" placeholder="Add a comment..."><button class="btn" onclick="addComment('${p.id}')">Post</button></div></article>`}).join("")||"<div class='card muted'>No posts yet.</div>"}
+window.toggleLike=async id=>{const {data}=await sb.from("likes").select("*").eq("post_id",id).eq("user_id",me.id).maybeSingle();if(data)await sb.from("likes").delete().eq("post_id",id).eq("user_id",me.id);else await sb.from("likes").insert({post_id:id,user_id:me.id});loadHome()};window.addComment=async id=>{const i=$("comment-"+id),body=i.value.trim();if(!body)return;const {error}=await sb.from("comments").insert({post_id:id,user_id:me.id,body});if(error)return alert(error.message);i.value="";loadHome()};window.toggleSave=id=>{let a=savedIds();a=a.includes(id)?a.filter(x=>x!==id):[...a,id];saveIds(a);alert("Saved updated ✅")};window.sharePost=async id=>{const u=`${location.origin}${location.pathname}?post=${id}`;if(navigator.share)try{await navigator.share({url:u});return}catch{}await navigator.clipboard.writeText(u);alert("Post link copied ✅")};
 
-async function loadHome(){
-  const {data:follows}=await sb.from("follows").select("following_id").eq("follower_id",me.id);
-  const ids=[me.id,...(follows||[]).map(x=>x.following_id)];
-  const {data:posts,error}=await sb.from("posts").select("*").in("user_id",ids).order("created_at",{ascending:false}).limit(50);
-  if(error){$("feed").innerHTML=`<div class="card err">${esc(error.message)}</div>`;return}
-  const pm=await getProfiles((posts||[]).map(p=>p.user_id));const postIds=(posts||[]).map(p=>p.id);
-  let comments=[],likes=[];
-  if(postIds.length){
-    const [cr,lr]=await Promise.all([sb.from("comments").select("*").in("post_id",postIds).order("created_at",{ascending:true}),sb.from("likes").select("post_id,user_id").in("post_id",postIds)]);
-    comments=cr.data||[];likes=lr.data||[];
-  }
-  const cpm=await getProfiles(comments.map(c=>c.user_id));
-  $("feed").innerHTML=(posts||[]).map(p=>{
-    const media=p.media_type==="video"?`<video class="media" src="${p.media_url}" controls playsinline></video>`:`<img class="media" src="${p.media_url}" alt="Post">`;
-    const pls=likes.filter(l=>l.post_id===p.id);const liked=pls.some(l=>l.user_id===me.id);const pcs=comments.filter(c=>c.post_id===p.id);
-    const ch=pcs.length?pcs.map(c=>`<div class="comment"><b>@${esc(cpm[c.user_id]?.username||"user")}</b> ${esc(c.body||c.message||"")}</div>`).join(""):`<div class="muted">No comments yet.</div>`;
-    return `<article class="card post">
-      <div class="postHead row">${avatarHTML(pm[p.user_id])}<div><b>${esc(pm[p.user_id]?.full_name||"User")}</b><div class="muted">@${esc(pm[p.user_id]?.username||"user")} · ${indiaTime(p.created_at)}</div></div></div>
-      ${media}
-      <div class="actions"><button onclick="toggleLike('${p.id}',this)">${liked?"♥":"♡"}</button><span class="muted">${pls.length}</span><button onclick="focusComment('${p.id}')">💬</button></div>
-      <div class="caption">${esc(p.caption||"")}</div><div class="comments">${ch}</div>
-      <div class="commentForm"><input id="comment-${p.id}" class="input" placeholder="Add a comment..."><button class="btn" onclick="addComment('${p.id}')">Post</button></div>
-    </article>`;
-  }).join("")||`<div class="card empty">No posts yet.</div>`;
-}
-window.focusComment=id=>{const el=$("comment-"+id);if(el)el.focus()};
-window.toggleLike=async(id,btn)=>{
-  const {data,error}=await sb.from("likes").select("*").eq("post_id",id).eq("user_id",me.id).maybeSingle();
-  if(error)return alert("Like error: "+error.message);
-  if(data){const r=await sb.from("likes").delete().eq("post_id",id).eq("user_id",me.id);if(r.error)return alert(r.error.message);btn.textContent="♡"}
-  else{const r=await sb.from("likes").insert({post_id:id,user_id:me.id});if(r.error)return alert(r.error.message);btn.textContent="♥"}
-  await loadHome();
-};
-window.addComment=async id=>{const input=$("comment-"+id),body=input.value.trim();if(!body)return;const {error}=await sb.from("comments").insert({post_id:id,user_id:me.id,body});if(error)return alert("Comment error: "+error.message);input.value="";await loadHome()};
+async function loadReels(){const {data}=await sb.from("posts").select("*").eq("media_type","video").order("created_at",{ascending:false});$("reels").innerHTML=(data||[]).map(p=>`<div class="reel"><video src="${p.media_url}" controls loop></video><div class="reelText">${esc(p.caption||"")}</div></div>`).join("")||"<div class='card muted'>No reels yet.</div>"}
+async function upload(bucket,file){const path=`${me.id}/${Date.now()}.${file.name.split('.').pop()||'bin'}`;const {error}=await sb.storage.from(bucket).upload(path,file,{contentType:file.type});if(error)throw error;return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
+let postBusy=false;$("publishPost").onclick=async()=>{if(postBusy)return;postBusy=true;$("publishPost").disabled=true;try{const fs=[...$("postFile").files];if(!fs.length)throw new Error("Choose media");for(const f of fs){const url=await upload("posts",f);const {error}=await sb.from("posts").insert({user_id:me.id,caption:$("postCaption").value.trim(),media_url:url,media_type:f.type.startsWith("video/")?"video":"image"});if(error)throw error}setMsg("postMsg","Published ✅",true);$("postFile").value="";$("postCaption").value="";loadHome()}catch(e){setMsg("postMsg",e.message)}finally{postBusy=false;$("publishPost").disabled=false}};
+let storyBusy=false;$("publishStory").onclick=async()=>{if(storyBusy)return;storyBusy=true;$("publishStory").disabled=true;try{const f=$("storyFile").files[0];if(!f)throw new Error("Choose media");const url=await upload("stories",f);const {error}=await sb.from("stories").insert({user_id:me.id,caption:$("storyCaption").value.trim(),media_url:url,media_type:f.type.startsWith("video/")?"video":"image"});if(error)throw error;setMsg("storyMsg","Story published ✅",true);$("storyFile").value="";loadStories()}catch(e){setMsg("storyMsg",e.message)}finally{storyBusy=false;$("publishStory").disabled=false}};
 
-async function loadReels(){
-  const {data}=await sb.from("posts").select("*").eq("media_type","video").order("created_at",{ascending:false}).limit(30);
-  const pm=await getProfiles((data||[]).map(p=>p.user_id));
-  $("reels").innerHTML=(data||[]).map(p=>`<div class="reel"><video src="${p.media_url}" controls playsinline loop></video><div class="reelText"><b>@${esc(pm[p.user_id]?.username||"user")}</b><p>${esc(p.caption||"")}</p></div></div>`).join("")||`<div class="card empty">No reels yet.</div>`;
-}
-async function upload(bucket,file){const ext=(file.name.split(".").pop()||"bin").toLowerCase();const path=`${me.id}/${Date.now()}.${ext}`;const {error}=await sb.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
-let postPublishing = false;
+async function loadPeople(q=""){let qq=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())qq=qq.or(`username.ilike.%${q}%,full_name.ilike.%${q}%`);const {data}=await qq;$("people").innerHTML=(data||[]).map(u=>`<div class="userRow row between"><div class="row clickable" onclick="openUserProfile('${u.id}')">${avatarHTML(u)}<div><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div></div><button class="btn" onclick="toggleFollow('${u.id}')">Follow</button><button class="btn ghost" onclick="openChat('${u.id}')">Message</button></div>`).join("")};$("peopleSearch").oninput=e=>loadPeople(e.target.value);window.toggleFollow=async uid=>{const {data}=await sb.from("follows").select("*").eq("follower_id",me.id).eq("following_id",uid).maybeSingle();if(data)await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",uid);else await sb.from("follows").insert({follower_id:me.id,following_id:uid});loadPeople($("peopleSearch").value)};
 
-$("publishPost").onclick = async () => {
-  if (postPublishing) return;
+window.openUserProfile=async uid=>{if(uid===me.id)return showScreen("profile");const [p,posts,fc,fic,bl,fl]=await Promise.all([sb.from("profiles").select("*").eq("id",uid).single(),sb.from("posts").select("*").eq("user_id",uid).order("created_at",{ascending:false}),sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",uid),sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",uid),sb.from("blocks").select("*").eq("blocker_id",me.id).eq("blocked_id",uid).maybeSingle(),sb.from("follows").select("*").eq("follower_id",me.id).eq("following_id",uid).maybeSingle()]);const u=p.data;$("viewUserProfile").innerHTML=`<div class="row">${avatarHTML(u,"lg")}<div><h2 style="margin:0">${esc(u.full_name||"User")}</h2><div class="muted">@${esc(u.username||"user")}</div></div></div><p>${esc(u.bio||"")}</p><div class="stats"><div class="stat"><b>${(posts.data||[]).length}</b>Posts</div><div class="stat"><b>${fc.count||0}</b>Followers</div><div class="stat"><b>${fic.count||0}</b>Following</div></div><div class="row wrap"><button class="btn" onclick="toggleFollow('${uid}');openUserProfile('${uid}')">${fl.data?"Following":"Follow"}</button><button class="btn ghost" onclick="openChat('${uid}')">Message</button><button class="btn ghost" onclick="shareProfile('${uid}')">Share ID</button><button class="btn ${bl.data?"good":"danger"}" onclick="toggleBlock('${uid}',${!!bl.data})">${bl.data?"Unblock":"Block"}</button><button class="btn ghost" onclick="reportUser('${uid}')">Report</button></div>`;$("viewUserPosts").innerHTML=(posts.data||[]).map(p=>`<div class="tile">${p.media_type==="video"?`<video src="${p.media_url}" controls></video>`:`<img src="${p.media_url}">`}</div>`).join("");showScreen("userProfile")};
+window.toggleBlock=async(uid,on)=>{if(on)await sb.from("blocks").delete().eq("blocker_id",me.id).eq("blocked_id",uid);else await sb.from("blocks").insert({blocker_id:me.id,blocked_id:uid});openUserProfile(uid)};window.reportUser=async uid=>{const reason=prompt("Report reason:","spam");if(!reason)return;const {error}=await sb.from("reports").insert({reporter_id:me.id,reported_user_id:uid,reason,details:"Reported from profile"});alert(error?error.message:"Report submitted ✅")};window.shareProfile=async uid=>{const u=`${location.origin}${location.pathname}?user=${uid}`;if(navigator.share)try{await navigator.share({url:u});return}catch{}await navigator.clipboard.writeText(u);alert("Profile link copied ✅")};
 
-  postPublishing = true;
-  $("publishPost").disabled = true;
-  $("publishPost").textContent = "Publishing...";
+async function loadChatUsers(){const {data}=await sb.from("profiles").select("*").neq("id",me.id).limit(50);$("chatUsers").innerHTML=(data||[]).map(u=>`<div class="userRow row between"><div class="row clickable" onclick="openUserProfile('${u.id}')">${avatarHTML(u)}<div><b>${esc(u.full_name||"User")}</b></div></div><button class="btn" onclick="openChat('${u.id}')">Message</button></div>`).join("")};window.openChat=async uid=>{const {data}=await sb.from("profiles").select("*").eq("id",uid).single();chatUser=data;$("chatName").textContent=data.full_name||"User";$("chatAvatar").innerHTML=data.avatar_url?`<img src="${data.avatar_url}">`:initials(data.full_name);$("chatHeaderProfile").onclick=()=>openUserProfile(uid);$("shareChatUserBtn").onclick=()=>shareProfile(uid);updateChatStatus();showScreen("chat");loadMessages();subscribeChat()};async function loadMessages(){const a=me.id,b=chatUser.id;const {data}=await sb.from("messages").select("*").or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`).order("created_at",{ascending:true});$("chatBox").innerHTML=(data||[]).map(m=>`<div class="bubble ${m.sender_id===me.id?"mine":"theirs"}">${esc(m.body??m.message??"")}<div class="muted">${indiaTime(m.created_at)}</div></div>`).join("")}async function sendMessage(){const text=$("messageInput").value.trim();if(!text)return;const {error}=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,body:text});if(error)return alert(error.message);$("messageInput").value="";loadMessages()}$("sendMsg").onclick=sendMessage;function subscribeChat(){if(chatChannel)sb.removeChannel(chatChannel);chatChannel=sb.channel("chat-"+me.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},()=>loadMessages()).subscribe()}$("reportBtn").onclick=()=>reportUser(chatUser.id);$("blockBtn").onclick=()=>toggleBlock(chatUser.id,false);
 
-  try {
-    const f = $("postFile").files[0];
-    if (!f) throw new Error("Choose a photo or video");
+async function loadNotifications(){const {data}=await sb.from("notifications").select("*").eq("user_id",me.id).order("created_at",{ascending:false});const pm=await getProfiles((data||[]).map(x=>x.actor_id));$("notifications").innerHTML=(data||[]).map(n=>`<div class="notification clickable" onclick="openUserProfile('${n.actor_id}')"><b>@${esc(pm[n.actor_id]?.username||"user")}</b> ${esc(n.type)}<div class="muted">${indiaTime(n.created_at)}</div></div>`).join("")};$("markRead").onclick=async()=>{await sb.from("notifications").update({is_read:true}).eq("user_id",me.id);loadNotifications()};function subscribeNotifications(){notificationChannel=sb.channel("notifs-"+me.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:`user_id=eq.${me.id}`},loadNotifications).subscribe()}
 
-    const url = await upload("posts", f);
+async function loadProfile(){const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p;$("myName").textContent=p.full_name||"User";$("myUsername").textContent="@"+(p.username||"user");$("myBio").textContent=p.bio||"";$("myLink").textContent=p.website||"";$("verifiedBadge").textContent=p.is_verified?"✔ Verified":"";$("myAvatar").innerHTML=p.avatar_url?`<img src="${p.avatar_url}">`:initials(p.full_name);$("fullName").value=p.full_name||"";$("username").value=p.username||"";$("bio").value=p.bio||"";$("website").value=p.website||"";$("location").value=p.location||"";$("profileType").value=p.profile_type||"personal";const [a,b,c,d]=await Promise.all([sb.from("posts").select("*",{count:"exact",head:true}).eq("user_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",me.id),sb.from("posts").select("*").eq("user_id",me.id).order("created_at",{ascending:false})]);$("postsCount").textContent=a.count||0;$("followersCount").textContent=b.count||0;$("followingCount").textContent=c.count||0;$("myGrid").innerHTML=(d.data||[]).map(x=>`<div class="tile">${x.media_type==="video"?`<video src="${x.media_url}" controls></video>`:`<img src="${x.media_url}">`}</div>`).join("")};$("saveProfile").onclick=async()=>{let avatar_url=profile.avatar_url;const f=$("avatarFile").files[0];if(f)avatar_url=await upload("avatars",f);const {error}=await sb.from("profiles").update({full_name:$("fullName").value.trim(),username:$("username").value.trim(),bio:$("bio").value.trim(),website:$("website").value.trim(),location:$("location").value.trim(),profile_type:$("profileType").value,avatar_url}).eq("id",me.id);if(error)return alert(error.message);$("editProfile").classList.add("hide");ensureProfile();loadProfile()};
 
-    const { error } = await sb.from("posts").insert({
-      user_id: me.id,
-      caption: $("postCaption").value.trim(),
-      media_url: url,
-      media_type: f.type.startsWith("video/") ? "video" : "image"
-    });
-
-    if (error) throw error;
-
-    status($("postMsg"), "Published ✅", true);
-    $("postFile").value = "";
-    $("postCaption").value = "";
-    await loadHome();
-
-  } catch (e) {
-    status($("postMsg"), e.message);
-  } finally {
-    postPublishing = false;
-    $("publishPost").disabled = false;
-    $("publishPost").textContent = "Publish Post";
-  }
-};
-let storyPublishing = false;
-
-$("publishStory").onclick = async () => {
-  if (storyPublishing) return;
-
-  storyPublishing = true;
-  $("publishStory").disabled = true;
-  $("publishStory").textContent = "Publishing...";
-
-  try {
-    const f = $("storyFile").files[0];
-    if (!f) throw new Error("Choose a photo or video");
-
-    const url = await upload("stories", f);
-
-    const { error } = await sb.from("stories").insert({
-      user_id: me.id,
-      caption: $("storyCaption").value.trim(),
-      media_url: url,
-      media_type: f.type.startsWith("video/") ? "video" : "image"
-    });
-
-    if (error) throw error;
-
-    setMsg("storyMsg", "Story published ✅", true);
-    $("storyFile").value = "";
-    $("storyCaption").value = "";
-
-    await loadStories();
-
-  } catch (e) {
-    setMsg("storyMsg", e.message);
-  } finally {
-    storyPublishing = false;
-    $("publishStory").disabled = false;
-    $("publishStory").textContent = "Publish Story";
-  }
-};
-async function loadPeople(q=""){
-  let query=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())query=query.or(`username.ilike.%${q.trim()}%,full_name.ilike.%${q.trim()}%`);
-  const [pr,fr,br]=await Promise.all([query,sb.from("follows").select("following_id").eq("follower_id",me.id),sb.from("blocks").select("blocked_id").eq("blocker_id",me.id)]);
-  const following=new Set((fr.data||[]).map(x=>x.following_id)),blocked=new Set((br.data||[]).map(x=>x.blocked_id));
-  $("people").innerHTML=(pr.data||[]).filter(u=>!blocked.has(u.id)).map(u=>`<div class="userRow row between">${avatarHTML(u)}<div style="flex:1"><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div><button class="btn ${following.has(u.id)?"ghost":""}" onclick="toggleFollow('${u.id}',${following.has(u.id)})">${following.has(u.id)?"Following":"Follow"}</button><button class="btn ghost" onclick="openChat('${u.id}')">Message</button></div>`).join("")||`<div class="empty">No users found.</div>`;
-}
-$("peopleSearch").oninput=e=>loadPeople(e.target.value);
-window.toggleFollow=async(uid,on)=>{if(on)await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",uid);else{const r=await sb.from("follows").insert({follower_id:me.id,following_id:uid});if(r.error)return alert(r.error.message)}await Promise.all([loadPeople($("peopleSearch").value),loadProfile()])};
-
-async function loadChatUsers(){
-  const [pr,br]=await Promise.all([sb.from("profiles").select("*").neq("id",me.id).limit(50),sb.from("blocks").select("blocked_id").eq("blocker_id",me.id)]);
-  const blocked=new Set((br.data||[]).map(x=>x.blocked_id));
-  $("chatUsers").innerHTML=(pr.data||[]).filter(u=>!blocked.has(u.id)).map(u=>`<div class="userRow row between">${avatarHTML(u)}<div style="flex:1"><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div><button class="btn" onclick="openChat('${u.id}')">Message</button></div>`).join("")||`<div class="empty">No other users yet.</div>`;
-}
-window.openChat=async uid=>{const {data,error}=await sb.from("profiles").select("*").eq("id",uid).single();if(error)return alert(error.message);chatUser=data;$("chatName").textContent=data.full_name||"User";$("chatAvatar").innerHTML=data.avatar_url?`<img src="${data.avatar_url}">`:initials(data.full_name);updateChatStatus();showScreen("chat");await loadMessages();subscribeChat()};
-async function loadMessages(){
-  const a=me.id,b=chatUser.id;const {data,error}=await sb.from("messages").select("*").or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`).order("created_at",{ascending:true});
-  if(error){$("chatBox").innerHTML=`<div class="err">${esc(error.message)}</div>`;return}
-  $("chatBox").innerHTML=(data||[]).map(m=>`<div class="bubble ${m.sender_id===me.id?"mine":"theirs"}">${esc(m.body??m.message??"")}<div class="time">${indiaTime(m.created_at)}</div></div>`).join("")||`<div class="muted">No messages yet.</div>`;$("chatBox").scrollTop=$("chatBox").scrollHeight;
-}
-async function sendMessage(){
-  const text=$("messageInput").value.trim();if(!text||!chatUser)return;
-  let r=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,body:text});
-  if(r.error&&/body|column/i.test(r.error.message||""))r=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,message:text});
-  if(r.error)return alert("Message not sent: "+r.error.message);$("messageInput").value="";await loadMessages();
-}
-$("sendMsg").onclick=sendMessage;$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendMessage()}});
-function subscribeChat(){if(chatChannel)sb.removeChannel(chatChannel);chatChannel=sb.channel("chat-"+me.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},p=>{const m=p.new;if(chatUser&&((m.sender_id===me.id&&m.receiver_id===chatUser.id)||(m.sender_id===chatUser.id&&m.receiver_id===me.id)))loadMessages()}).subscribe()}
-
-$("blockBtn").onclick=async()=>{if(!chatUser)return;const r=await sb.from("blocks").insert({blocker_id:me.id,blocked_id:chatUser.id});if(r.error&&!/duplicate/i.test(r.error.message))return alert(r.error.message);alert("User blocked");showScreen("people");loadPeople()};
-$("reportBtn").onclick=async()=>{if(!chatUser)return;const reason=prompt("Report reason:","spam");if(!reason)return;const {error}=await sb.from("reports").insert({reporter_id:me.id,reported_user_id:chatUser.id,reason,details:"Reported from chat"});alert(error?error.message:"Report submitted")};
-
-async function loadNotifications(){
-  const {data,error}=await sb.from("notifications").select("*").eq("user_id",me.id).order("created_at",{ascending:false}).limit(80);
-  if(error){$("notifications").innerHTML=`<div class="err">${esc(error.message)}</div>`;return}
-  const pm=await getProfiles((data||[]).map(n=>n.actor_id));const unread=(data||[]).filter(n=>!n.is_read).length;$("notifBadge").textContent=unread;$("notifBadge").classList.toggle("hide",!unread);
-  $("notifications").innerHTML=(data||[]).map(n=>{const who="@"+esc(pm[n.actor_id]?.username||"user");const text=n.type==="follow"?"started following you":n.type==="like"?"liked your post":n.type==="comment"?"commented on your post":"sent an update";return `<div class="notification"><b>${who}</b> ${text}<div class="muted">${indiaTime(n.created_at)} ${n.is_read?"":"· New"}</div></div>`}).join("")||`<div class="empty">No notifications yet.</div>`;
-}
-$("markRead").onclick=async()=>{await sb.from("notifications").update({is_read:true}).eq("user_id",me.id).eq("is_read",false);await loadNotifications()};
-function subscribeNotifications(){if(notificationChannel)sb.removeChannel(notificationChannel);notificationChannel=sb.channel("notifications-"+me.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:`user_id=eq.${me.id}`},()=>loadNotifications()).subscribe()}
-
-async function loadProfile(){
-  const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p;$("myName").textContent=p.full_name||"User";$("myUsername").textContent="@"+(p.username||"user");$("myBio").textContent=p.bio||"";$("myAvatar").innerHTML=p.avatar_url?`<img src="${p.avatar_url}">`:initials(p.full_name);$("fullName").value=p.full_name||"";$("username").value=p.username||"";$("bio").value=p.bio||"";
-  const [a,b,c,d]=await Promise.all([sb.from("posts").select("*",{count:"exact",head:true}).eq("user_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",me.id),sb.from("posts").select("*").eq("user_id",me.id).order("created_at",{ascending:false})]);
-  $("postsCount").textContent=a.count||0;$("followersCount").textContent=b.count||0;$("followingCount").textContent=c.count||0;$("myGrid").innerHTML=(d.data||[]).map(x=>`<div class="tile">${x.media_type==="video"?`<video src="${x.media_url}" muted></video>`:`<img src="${x.media_url}">`}</div>`).join("")||`<div class="muted">No posts yet.</div>`;
-}
-$("saveProfile").onclick=async()=>{try{let avatar_url=profile.avatar_url;const f=$("avatarFile").files[0];if(f)avatar_url=await upload("avatars",f);const username=$("username").value.trim().toLowerCase().replace(/[^a-z0-9_.]/g,"");if(username.length<3)throw new Error("Username must be at least 3 characters");const {error}=await sb.from("profiles").update({full_name:$("fullName").value.trim(),username,bio:$("bio").value.trim(),avatar_url}).eq("id",me.id);if(error)throw error;$("editProfile").classList.add("hide");await Promise.all([ensureProfile(),loadProfile(),loadHome()])}catch(e){alert(e.message)}};
-
-$("sendAppeal").onclick=async()=>{const message=$("appealText").value.trim();if(message.length<10)return alert("Write at least 10 characters");const {error}=await sb.from("appeals").insert({user_id:me.id,message});if(error)return alert(error.message);$("appealText").value="";await loadAppeals()};
-async function loadAppeals(){const {data}=await sb.from("appeals").select("*").eq("user_id",me.id).order("created_at",{ascending:false});$("appeals").innerHTML=(data||[]).map(a=>`<div class="card"><b>${esc(a.status)}</b><p>${esc(a.message)}</p><div class="muted">${esc(a.admin_note||"")}</div></div>`).join("")}
-
+async function loadSaved(){const ids=savedIds();if(!ids.length)return $("savedPosts").innerHTML="<div class='muted'>No saved posts.</div>";const {data}=await sb.from("posts").select("*").in("id",ids);$("savedPosts").innerHTML=(data||[]).map(p=>`<div class="card">${p.media_type==="video"?`<video class="media" src="${p.media_url}" controls></video>`:`<img class="media" src="${p.media_url}">`}<p>${esc(p.caption||"")}</p></div>`).join("")}
+window.loadActivity=async t=>{$("activityContent").innerHTML="<div class='muted'>Loading...</div>";if(t==="likes"){const {data}=await sb.from("likes").select("*").eq("user_id",me.id).order("created_at",{ascending:false});$("activityContent").innerHTML=(data||[]).map(x=>`<div class="activityItem">❤️ Liked a post · ${indiaTime(x.created_at)}</div>`).join("")}else if(t==="comments"){const {data}=await sb.from("comments").select("*").eq("user_id",me.id).order("created_at",{ascending:false});$("activityContent").innerHTML=(data||[]).map(x=>`<div class="activityItem">💬 ${esc(x.body||"")} · ${indiaTime(x.created_at)}</div>`).join("")}else if(t==="notifications"){await loadNotifications();$("activityContent").innerHTML=$("notifications").innerHTML}};
+window.showBlockedUsers=async()=>{const {data}=await sb.from("blocks").select("blocked_id").eq("blocker_id",me.id);const pm=await getProfiles((data||[]).map(x=>x.blocked_id));openModal("Blocked Accounts",(data||[]).map(x=>`<div class="userRow row between">${avatarHTML(pm[x.blocked_id])}<b>@${esc(pm[x.blocked_id]?.username||"user")}</b><button class="btn good" onclick="toggleBlock('${x.blocked_id}',true);closeModal()">Unblock</button></div>`).join("")||"No blocked users.")};
+$("themeBtn").onclick=()=>{const n=document.body.classList.contains("light")?"dark":"light";localStorage.setItem("AKOLIAS_THEME",n);applyTheme()};function applyTheme(){document.body.classList.toggle("light",(localStorage.getItem("AKOLIAS_THEME")||"dark")==="light")}
+window.showFaq=()=>openModal("FAQ","<p><b>How to post?</b><br>Use + Create.</p><p><b>How to report?</b><br>Open user profile or chat and tap Report.</p><p><b>How to contact support?</b><br>Raise a ticket below.</p>");
+window.createTicket=async()=>{const issue=$("supportIssue").value.trim();if(!issue)return alert("Describe your issue");const {data,error}=await sb.from("support_tickets").insert({user_id:me.id,subject:"Support Request",message:issue,status:"open",priority:"normal"}).select().single();if(error)return alert(error.message);$("supportArea").innerHTML=`<div class="card">Ticket #${data.id} created ✅</div>`};
+window.showMyTickets=async()=>{const {data}=await sb.from("support_tickets").select("*").eq("user_id",me.id).order("created_at",{ascending:false});$("supportArea").innerHTML=(data||[]).map(t=>`<div class="card"><b>#${t.id} · ${esc(t.status)}</b><p>${esc(t.message)}</p></div>`).join("")||"No tickets."};
+$("sendAppeal").onclick=async()=>{const message=$("appealText").value.trim();if(message.length<10)return alert("Write more detail");const {error}=await sb.from("appeals").insert({user_id:me.id,message});if(error)return alert(error.message);$("appealText").value="";loadAppeals()};async function loadAppeals(){if(!me)return;const {data}=await sb.from("appeals").select("*").eq("user_id",me.id).order("created_at",{ascending:false});$("appeals").innerHTML=(data||[]).map(a=>`<div class="card"><b>${esc(a.status)}</b><p>${esc(a.message)}</p></div>`).join("")}
 boot();
 </script>
-</body>
-</html>
+</body></html>

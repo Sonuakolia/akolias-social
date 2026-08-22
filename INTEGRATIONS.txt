@@ -1,0 +1,13 @@
+Akolias Social Ultimate - External Integrations
+
+The following modules are structurally prepared but require provider credentials before they can be truly live:
+1. Mobile OTP: Supabase Phone provider + SMS provider (Twilio/Vonage/etc.)
+2. Apple Login: Apple Developer OAuth credentials
+3. Voice/Video Calls: WebRTC signaling/TURN service or provider such as LiveKit/Twilio
+4. Push Notifications: FCM/APNs or web-push service
+5. Live Streaming: media server/streaming provider
+6. UPI/Payments: payment gateway merchant account (Razorpay/PhonePe/etc.)
+7. AI Moderation: moderation API/model + server-side processing
+8. Ads billing/monetization payouts: payment/compliance provider
+
+These cannot be made operational by browser HTML alone without credentials and service accounts.
