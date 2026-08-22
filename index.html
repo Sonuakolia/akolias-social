@@ -1,4 +1,4 @@
-
+ 
 <!doctype html>
 <html lang="en">
 <head>
@@ -164,7 +164,34 @@ async function sendCurrentMessage(){
 }
 $("sendMsg").onclick=sendCurrentMessage;
 $("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendCurrentMessage()})
-function subscribeChat(){if(chatChannel)sb.removeChannel(chatChannel);chatChannel=sb.channel("chat").on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:`receiver_id=eq.${me.id}`},()=>loadMessages()).subscribe()}
+function subscribeChat(){
+  if(chatChannel) sb.removeChannel(chatChannel);
+
+  chatChannel = sb
+    .channel("chat-" + me.id)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages"
+      },
+      payload => {
+        const m = payload.new;
+
+        if(
+          chatUser &&
+          (
+            (m.sender_id === me.id && m.receiver_id === chatUser.id) ||
+            (m.sender_id === chatUser.id && m.receiver_id === me.id)
+          )
+        ){
+          loadMessages();
+        }
+      }
+    )
+    .subscribe();
+}
 $("blockBtn").onclick=async()=>{if(!chatUser)return;await sb.from("blocks").insert({blocker_id:me.id,blocked_id:chatUser.id});alert("Blocked");showScreen("people");loadPeople()}
 $("reportBtn").onclick=async()=>{const reason=prompt("Report reason:","spam");if(!reason)return;const {error}=await sb.from("reports").insert({reporter_id:me.id,reported_user_id:chatUser.id,reason,details:"Reported from chat"});alert(error?error.message:"Report submitted")}
 async function loadProfile(){const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p;$("myName").textContent=p.full_name;$("myUsername").textContent="@"+p.username;$("myBio").textContent=p.bio||"";$("fullName").value=p.full_name||"";$("username").value=p.username||"";$("bio").value=p.bio||"";$("myAvatar").innerHTML=p.avatar_url?`<img src="${p.avatar_url}">`:initials(p.full_name);const [a,b,c,d]=await Promise.all([sb.from("posts").select("*",{count:"exact",head:true}).eq("user_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",me.id),sb.from("posts").select("*").eq("user_id",me.id).order("created_at",{ascending:false})]);$("pc").textContent=a.count||0;$("fc").textContent=b.count||0;$("fic").textContent=c.count||0;$("myGrid").innerHTML=(d.data||[]).map(x=>`<div class="tile">${x.media_type==="video"?`<video src="${x.media_url}" muted></video>`:`<img src="${x.media_url}">`}</div>`).join("")}
