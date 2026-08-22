@@ -8,9 +8,27 @@
 const sb=supabase.createClient("https://mhjtlxxgeepmbxeoravu.supabase.co","sb_publishable_gHUxa_Mrg3UKzhjq9Rr30g_45Mqfex6");let me=null;const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 $("login").onclick=async()=>{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)return $("msg").textContent=error.message;const {data:a}=await sb.from("admin_users").select("*").eq("user_id",data.user.id).maybeSingle();if(!a)return $("msg").textContent="Not an admin";me=data.user;$("auth").classList.add("hide");$("main").classList.remove("hide");loadAll()};
 $("logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
-async function loadAll(){const [pr,mr,rr,ar]=await Promise.all([sb.from("profiles").select("*").limit(300),sb.from("user_moderation").select("*"),sb.from("reports").select("*").order("created_at",{ascending:false}),sb.from("appeals").select("*").order("created_at",{ascending:false})]);const mm=Object.fromEntries((mr.data||[]).map(x=>[x.user_id,x]));$("users").innerHTML=(pr.data||[]).map(u=>{const m=mm[u.id],s=!!m?.is_suspended;return `<tr><td>${esc(u.full_name||"User")}<div class="muted">@${esc(u.username||"user")}</div></td><td>${s?"Suspended":"Active"}</td><td>${esc(m?.suspension_reason||"-")}</td><td><button class="btn ${s?"good":"danger"}" onclick="toggle('${u.id}',${!s})">${s?"Unsuspend":"Suspend"}</button></td></tr>`}).join("");$("reports").innerHTML=(rr.data||[]).map(r=>`<div class="card"><b>${esc(r.reason)}</b><div class="muted">${esc(r.details||"")}</div><select onchange="updateReport('${r.id}',this.value)"><option>open</option><option>reviewing</option><option>resolved</option><option>dismissed</option></select></div>`).join("");$("appeals").innerHTML=(ar.data||[]).map(a=>`<div class="card"><b>${esc(a.status)}</b><p>${esc(a.message)}</p><select onchange="updateAppeal('${a.id}',this.value)"><option>open</option><option>reviewing</option><option>approved</option><option>rejected</option></select></div>`).join("")}
+async function loadAll(){const [pr,mr,rr,ar]=await Promise.all([sb.from("profiles").select("*").limit(300),sb.from("user_moderation").select("*"),sb.from("reports").select("*").order("created_at",{ascending:false}),sb.from("appeals").select("*").order("created_at",{ascending:false})]);const mm=Object.fromEntries((mr.data||[]).map(x=>[x.user_id,x]));$("users").innerHTML=(pr.data||[]).map(u=>{const m=mm[u.id],s=!!m?.is_suspended;return `<tr><td>${esc(u.full_name||"User")}<div class="muted">@${esc(u.username||"user")}</div></td><td>${s?"Suspended":"Active"}</td><td>${esc(m?.suspension_reason||"-")}</td><td><button class="btn ${s?"good":"danger"}" onclick="toggle('${u.id}',${!s})">${s?"Unsuspend":"Suspend"}</button></td></tr>`}).join("");$("reports").innerHTML=(rr.data||[]).map(r=>`<div class="card"><b>${esc(r.reason)}</b><div class="muted">${esc(r.details||"")}</div><select onchange="updateReport('${r.id}',this.value)">
+  <option value="open" ${r.status==="open"?"selected":""}>open</option>
+  <option value="reviewing" ${r.status==="reviewing"?"selected":""}>reviewing</option>
+  <option value="resolved" ${r.status==="resolved"?"selected":""}>resolved</option>
+  <option value="dismissed" ${r.status==="dismissed"?"selected":""}>dismissed</option>
+</select></div>`).join("");$("appeals").innerHTML=(ar.data||[]).map(a=>`<div class="card"><b>${esc(a.status)}</b><p>${esc(a.message)}</p><select onchange="updateAppeal('${a.id}',this.value)"><option>open</option><option>reviewing</option><option>approved</option><option>rejected</option></select></div>`).join("")}
 window.toggle=async(uid,val)=>{const reason=val?(prompt("Suspension reason:","Community guideline violation")||"Suspended by admin"):"";const {error}=await sb.from("user_moderation").upsert({user_id:uid,is_suspended:val,suspension_reason:val?reason:"",updated_by:me.id,updated_at:new Date().toISOString()},{onConflict:"user_id"});if(error)return alert(error.message);loadAll()};
-window.updateReport=async(id,status)=>{await sb.from("reports").update({status}).eq("id",id)};
+window.updateReport = async (id, status) => {
+  const { error } = await sb
+    .from("reports")
+    .update({ status: status })
+    .eq("id", id);
+
+  if (error) {
+    alert("Status save error: " + error.message);
+    return;
+  }
+
+  alert("Status saved ✅");
+  await loadAll();
+};
 window.updateAppeal=async(id,status)=>{await sb.from("appeals").update({status,reviewed_by:me.id,reviewed_at:new Date().toISOString()}).eq("id",id)};
 (async()=>{const {data}=await sb.auth.getSession();if(data.session){const {data:a}=await sb.from("admin_users").select("*").eq("user_id",data.session.user.id).maybeSingle();if(a){me=data.session.user;$("auth").classList.add("hide");$("main").classList.remove("hide");loadAll()}}})();
 </script></body></html>
