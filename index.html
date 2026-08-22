@@ -34,6 +34,16 @@ textarea{min-height:88px;resize:vertical}.btn{border:0;border-radius:12px;paddin
 .nav button{background:none;border:0;color:white;font-size:22px;cursor:pointer;position:relative}.empty{text-align:center;color:var(--muted);padding:26px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:16px;z-index:100}.modalBox{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
 @media(max-width:700px){.shell{padding:10px 10px 90px}.brand{font-size:23px}.nav{overflow-x:auto;justify-content:space-between}.nav button{min-width:44px}}
+/* Mobile bottom navigation spacing */
+@media (max-width: 600px) {
+  body {
+    padding-bottom: 90px;
+  }
+
+  .bottomNav {
+    bottom: 10px;
+  }
+}
 </style>
 </head>
 <body>
