@@ -51,13 +51,8 @@ textarea{min-height:88px;resize:vertical}.btn{border:0;border-radius:12px;paddin
 <div class="brand">Akolias Social</div>
 
 <section id="auth" class="card">
-  <h3>Login / Signup</h3>
-  <input id="email" class="input" type="email" placeholder="Email">
-  <input id="password" class="input" type="password" placeholder="Password">
-  <div class="row">
-    <button id="loginBtn" class="btn">Login</button>
-    <button id="signupBtn" class="btn ghost">Sign Up</button>
-  </div>
+  <h3>Login</h3>
+  <button id="googleLoginBtn" class="btn">Continue with Google</button>
   <div id="authMsg" class="muted"></div>
 </section>
 
@@ -172,15 +167,14 @@ async function boot(){
   const {data}=await sb.auth.getSession();
   if(data.session) await enter(data.session.user);
 }
-$("loginBtn").onclick=async()=>{
-  const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
-  if(error)return setMsg("authMsg",error.message);
-  await enter(data.user);
-};
-$("signupBtn").onclick=async()=>{
-  const {data,error}=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value});
-  if(error)return setMsg("authMsg",error.message);
-  if(data.session) await enter(data.user); else setMsg("authMsg","Account created. Confirm email if required.",true);
+$("googleLoginBtn").onclick=async()=>{
+  const {error}=await sb.auth.signInWithOAuth({
+    provider:"google",
+    options:{
+      redirectTo:"https://sonuakolia.github.io/akolias-social/"
+    }
+  });
+  if(error) setMsg("authMsg",error.message);
 };
 async function logout(){if(presence)await sb.removeChannel(presence);if(chatChannel)await sb.removeChannel(chatChannel);if(notificationChannel)await sb.removeChannel(notificationChannel);await sb.auth.signOut();location.reload()}
 $("logoutBtn").onclick=logout;$("suspendedLogout").onclick=logout;
