@@ -111,7 +111,31 @@ $("connect").onclick=()=>{
 $("login").onclick=async()=>{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)return status($("authMsg"),error.message);enter(data.user)}
 $("signup").onclick=async()=>{const {data,error}=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value});if(error)return status($("authMsg"),error.message);if(data.session)enter(data.user);else status($("authMsg"),"Signup complete. Confirm email if required.",true)}
 async function check(){const {data}=await sb.auth.getSession();if(data.session)enter(data.session.user)}
-async function enter(u){me=u;$("setup").classList.add("hide");$("auth").classList.add("hide");if($("topAccount"))$("topAccount").textContent=u.email||"Logged in";const {data:m}=await sb.from("user_moderation").select("is_suspended,suspension_reason").eq("user_id",u.id).maybeSingle();if(m?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=m.suspension_reason||"Suspended by admin";return}$("main").classList.remove("hide");$("nav").classList.remove("hide");await ensureProfile();await startPresence();await Promise.all([loadHome(),loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);showScreen("home")}
+async function enter(u){me=u;$("setup").classList.add("hide");$("auth").classList.add("hide");if($("topAccount"))$("topAccount").textContent=u.email||"Logged in";const {data:m}=await sb.from("user_moderation").select("is_suspended,suspension_reason").eq("user_id",u.id).maybeSingle();if(m?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=m.suspension_reason||"Suspended by admin";return}$("main").classList.remove("hide");$("nav").classList.remove("hide");await ensureProfile();await startPresence();await Promise.all([loadHome()async function loadCommentsForPost(postId){
+  const {data,error}=await sb
+    .from("comments")
+    .select("id,user_id,body,created_at")
+    .eq("post_id",postId)
+    .order("created_at",{ascending:true});
+
+  if(error) return [];
+
+  const pm = await profiles((data||[]).map(c=>c.user_id));
+
+  return (data||[]).map(c=>({
+    ...c,
+    username: pm[c.user_id]?.username || "user"
+  }));
+}for(const p of (data||[])){
+  const comments = await loadCommentsForPost(p.id);
+  const box = document.getElementById("comments-"+p.id);
+
+  if(box){
+    box.innerHTML = comments.length
+      ? comments.map(c=>`<div><b>@${esc(c.username)}</b> ${esc(c.body)}</div>`).join("")
+      : "";
+  }
+},loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);showScreen("home")}
 $("logoutSusp").onclick=async()=>{await sb.auth.signOut();location.reload()}
 $("logoutBtn").onclick=async()=>{if(presence)await sb.removeChannel(presence);if(chatChannel)await sb.removeChannel(chatChannel);await sb.auth.signOut();location.reload()}
 async function ensureProfile(){const {data}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();if(data){profile=data;return}const base=(me.email||"user").split("@")[0].replace(/[^a-z0-9_]/gi,"").toLowerCase();await sb.from("profiles").insert({id:me.id,full_name:base,username:base+"_"+me.id.slice(0,5)});const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p}
