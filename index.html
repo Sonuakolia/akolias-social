@@ -121,8 +121,29 @@ function online(uid){return Object.values(presence?.presenceState?.()||{}).flat(
 function updateChatStatus(){$("chatStatus").textContent=online(chatUser.id)?"Online":"Offline"}
 window.showScreen=n=>{["home","reels","create","people","notifications","messages","chat","profile","appeals"].forEach(x=>$(x+"Screen").classList.toggle("hide",x!==n));if(n==="home")loadHome();if(n==="notifications")loadNotifications();if(n==="messages")loadChatUsers();if(n==="profile")loadProfile()}
 async function loadStories(){const cut=new Date(Date.now()-86400000).toISOString();const {data}=await sb.from("stories").select("*").gte("created_at",cut).order("created_at",{ascending:false});const pm=await profiles((data||[]).map(x=>x.user_id));$("stories").innerHTML=(data||[]).map(s=>`<div class="story">${av(pm[s.user_id])}@${esc(pm[s.user_id]?.username||"user")}</div>`).join("")||"<span class='muted'>No stories</span>"}
-async function loadHome(){const {data:f}=await sb.from("follows").select("following_id").eq("follower_id",me.id);const ids=[me.id,...(f||[]).map(x=>x.following_id)];const {data}=await sb.from("posts").select("*").in("user_id",ids).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.user_id));$("feed").innerHTML=(data||[]).map(p=>{const m=p.media_type==="video"?`<video class="media" src="${p.media_url}" controls></video>`:`<img class="media" src="${p.media_url}">`;return `<article class="card post"><div class="postHead row">${av(pm[p.user_id])}<div><b>${esc(pm[p.user_id]?.full_name||"User")}</b><div class="muted">@${esc(pm[p.user_id]?.username||"user")}</div></div></div>${m}<div class="actions"><button onclick="like('${p.id}',this)">♡</button><button>💬</button></div><div class="caption">${esc(p.caption||"")}</div></article>`}).join("")||"<div class='card muted'>No posts yet.</div>"}
-window.like=async (id,btn)=>{
+async function loadHome(){const {data:f}=await sb.from("follows").select("following_id").eq("follower_id",me.id);const ids=[me.id,...(f||[]).map(x=>x.following_id)];const {data}=await sb.from("posts").select("*").in("user_id",ids).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.user_id));$("feed").innerHTML=(data||[]).map(p=>{const m=p.media_type==="video"?`<video class="media" src="${p.media_url}" controls></video>`:`<img class="media" src="${p.media_url}">`;return `<article class="card post"><div class="postHead row">${av(pm[p.user_id])}<div><b>${esc(pm[p.user_id]?.full_name||"User")}</b><div class="muted">@${esc(pm[p.user_id]?.username||"user")}</div></div></div>${m}<div class="actions"><button onclick="like('${p.id}',this)">♡</button><button onclick="commentPost('${p.id}')">💬</button></div><div class="caption">${esc(p.caption||"")}</div></article>`}).join("")||"<div class='card muted'>No posts yet.</div>"}
+window.like=
+  window.commentPost = async (postId) => {
+  const text = prompt("Write a comment:");
+
+  if (!text || !text.trim()) return;
+
+  const { error } = await sb
+    .from("comments")
+    .insert({
+      post_id: postId,
+      user_id: me.id,
+      body: text.trim()
+    });
+
+  if (error) {
+    alert("Comment error: " + error.message);
+    return;
+  }
+
+  alert("Comment posted ✅");
+};
+  async (id,btn)=>{
   const {data,error:checkError}=await sb.from("likes").select("*").eq("post_id",id).eq("user_id",me.id).maybeSingle();
   if(checkError){alert("Like error: "+checkError.message);return}
   if(data){
