@@ -300,7 +300,44 @@ $("publishPost").onclick = async () => {
     $("publishPost").textContent = "Publish Post";
   }
 };
+let storyPublishing = false;
 
+$("publishStory").onclick = async () => {
+  if (storyPublishing) return;
+
+  storyPublishing = true;
+  $("publishStory").disabled = true;
+  $("publishStory").textContent = "Publishing...";
+
+  try {
+    const f = $("storyFile").files[0];
+    if (!f) throw new Error("Choose a photo or video");
+
+    const url = await upload("stories", f);
+
+    const { error } = await sb.from("stories").insert({
+      user_id: me.id,
+      caption: $("storyCaption").value.trim(),
+      media_url: url,
+      media_type: f.type.startsWith("video/") ? "video" : "image"
+    });
+
+    if (error) throw error;
+
+    setMsg("storyMsg", "Story published ✅", true);
+    $("storyFile").value = "";
+    $("storyCaption").value = "";
+
+    await loadStories();
+
+  } catch (e) {
+    setMsg("storyMsg", e.message);
+  } finally {
+    storyPublishing = false;
+    $("publishStory").disabled = false;
+    $("publishStory").textContent = "Publish Story";
+  }
+};
 async function loadPeople(q=""){
   let query=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())query=query.or(`username.ilike.%${q.trim()}%,full_name.ilike.%${q.trim()}%`);
   const [pr,fr,br]=await Promise.all([query,sb.from("follows").select("following_id").eq("follower_id",me.id),sb.from("blocks").select("blocked_id").eq("blocker_id",me.id)]);
