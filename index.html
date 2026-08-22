@@ -1,133 +1,220 @@
--- AKOLIAS SOCIAL FINAL PATCH
--- Safe to run more than once.
 
-create extension if not exists pgcrypto;
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Akolias Social</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0a0b10;--panel:#141720;--line:#292e39;--txt:#fff;--muted:#9ca5b4;--a:#ff3d81;--b:#7c4dff;--good:#67e2ad;--bad:#ff7d86}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,Arial}
+.app{max-width:980px;margin:auto;padding:14px 14px 92px}.brand{font-size:28px;font-weight:900;text-align:center;margin:8px 0 16px;background:linear-gradient(90deg,#ff9b24,var(--a),var(--b));-webkit-background-clip:text;color:transparent}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}.input,textarea{width:100%;background:#0f1117;border:1px solid var(--line);color:white;border-radius:12px;padding:12px;margin:6px 0}textarea{min-height:90px}
+.btn{border:0;border-radius:12px;padding:10px 13px;color:#fff;font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));cursor:pointer}.ghost{background:#252936}.danger{background:#6b252d}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.muted{color:var(--muted);font-size:13px}.hide{display:none}.ok{color:var(--good)}.err{color:var(--bad)}
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--a),var(--b));overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}
+.stories{display:flex;gap:12px;overflow:auto}.story{min-width:68px;text-align:center;font-size:11px}.story .avatar{width:62px;height:62px;margin:auto auto 5px;border:3px solid #ff3d81}
+.media{width:100%;max-height:700px;object-fit:cover;background:#0b0d12}.post{padding:0;overflow:hidden}.postHead{padding:12px}.actions{display:flex;gap:10px;padding:10px 12px}.actions button{background:none;border:0;color:#fff;font-size:21px}.caption{padding:0 12px 14px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.tile{aspect-ratio:1;background:#10131a;overflow:hidden}.tile img,.tile video{width:100%;height:100%;object-fit:cover}
+.reel{height:72vh;min-height:520px;background:#050506;border-radius:20px;overflow:hidden;position:relative;margin-bottom:16px}.reel video{width:100%;height:100%;object-fit:cover}.reelText{position:absolute;left:0;right:0;bottom:0;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.chat{height:52vh;min-height:380px;overflow:auto;background:#0d1016;border-radius:15px;padding:12px}.bubble{max-width:78%;padding:9px 11px;border-radius:14px;margin:7px 0}.mine{margin-left:auto;background:linear-gradient(135deg,var(--a),var(--b))}.theirs{background:#242833}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{text-align:center;background:#0f1218;border-radius:12px;padding:10px}.stat b{display:block;font-size:18px}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;width:min(940px,calc(100% - 20px));display:flex;justify-content:space-around;background:#11141b;border:1px solid var(--line);border-radius:16px;padding:8px;z-index:30}.nav button{background:none;border:0;color:#fff;font-size:22px}
+@media(max-width:700px){.app{padding:10px 10px 90px}.brand{font-size:23px}}
+</style></head>
+<body><div class="app">
+<div class="brand">Akolias Social</div>
+<section id="setup" class="card hide"><h3>Connect Supabase</h3><input id="url" class="input" placeholder="Project URL"><input id="key" class="input" placeholder="Publishable / anon key"><button id="connect" class="btn">Connect</button><div id="setupMsg"></div></section>
+<section id="auth" class="card hide"><h3>Login / Signup</h3><input id="email" class="input" type="email" placeholder="Email"><input id="password" class="input" type="password" placeholder="Password"><div class="row"><button id="login" class="btn">Login</button><button id="signup" class="btn ghost">Sign Up</button></div><div id="authMsg"></div></section>
+<section id="suspended" class="card hide"><h2>Account suspended</h2><p id="suspendReason"></p><p class="muted">You can submit an appeal from the Appeals screen.</p><button id="logoutSusp" class="btn">Logout</button></section>
 
--- Messages: support app column "body"; preserve legacy "message" if it exists.
-alter table if exists public.messages add column if not exists body text;
+<section id="main" class="hide">
+<div class="card row between" style="padding:10px 14px">
+  <div><b>Akolias Social</b><div class="muted" id="topAccount">Logged in</div></div>
+  <button id="logoutBtn" class="btn ghost">Logout</button>
+</div>
+<section id="homeScreen">
+<div class="card"><div class="row between"><h3>Stories</h3><button class="btn ghost" onclick="showScreen('create')">+ Add</button></div><div id="stories" class="stories"></div></div>
+<div id="feed"></div>
+</section>
 
-do $$
-begin
-  if exists (
-    select 1 from information_schema.columns
-    where table_schema='public' and table_name='messages' and column_name='message'
-  ) then
-    execute 'update public.messages set body = coalesce(body, message) where body is null';
-  end if;
-end $$;
+<section id="reelsScreen" class="hide"><h3>Reels</h3><div id="reels"></div></section>
 
-alter table public.messages enable row level security;
+<section id="createScreen" class="hide">
+<div class="card"><h3>Create Post</h3><input id="postFile" class="input" type="file" accept="image/*,video/*"><textarea id="postCaption" placeholder="Caption"></textarea><button id="publishPost" class="btn">Publish Post</button><div id="postMsg"></div></div>
+<div class="card"><h3>Create Story</h3><input id="storyFile" class="input" type="file" accept="image/*,video/*"><textarea id="storyCaption" placeholder="Story caption"></textarea><button id="publishStory" class="btn">Publish Story</button><div id="storyMsg"></div></div>
+</section>
 
-drop policy if exists "Users can view their messages" on public.messages;
-drop policy if exists "messages own read" on public.messages;
-create policy "messages own read"
-on public.messages for select to authenticated
-using (auth.uid() = sender_id or auth.uid() = receiver_id);
+<section id="peopleScreen" class="hide"><div class="card"><h3>Discover People</h3><input id="peopleSearch" class="input" placeholder="Search users"><div id="people"></div></div></section>
 
-drop policy if exists "Users can send messages" on public.messages;
-drop policy if exists "messages send" on public.messages;
-drop policy if exists "users send messages as self" on public.messages;
-drop policy if exists "messages_insert_own_sender" on public.messages;
-create policy "messages_insert_own_sender"
-on public.messages for insert to authenticated
-with check (auth.uid() = sender_id);
+<section id="notificationsScreen" class="hide"><div class="card"><div class="row between"><h3>Notifications</h3><button id="markRead" class="btn ghost">Mark read</button></div><div id="notifications"></div></div></section>
 
-create or replace function public.set_message_sender()
-returns trigger language plpgsql security invoker as $$
-begin
-  new.sender_id := auth.uid();
-  return new;
-end;
-$$;
+<section id="messagesScreen" class="hide">
+<div class="card">
+  <div class="row between">
+    <div>
+      <h3 style="margin:0">Messages</h3>
+      <div class="muted">Select a user to start chatting</div>
+    </div>
+    <button class="btn ghost" onclick="loadChatUsers()">Refresh</button>
+  </div>
+  <div id="messagesStatus" class="muted" style="margin:10px 0"></div>
+  <div id="chatUsers"></div>
+</div>
+</section>
+<section id="chatScreen" class="hide">
+<div class="card row between"><div class="row"><div id="chatAvatar" class="avatar">US</div><div><b id="chatName"></b><div id="chatStatus" class="muted">Offline</div></div></div><div class="row"><button id="reportBtn" class="btn ghost">Report</button><button id="blockBtn" class="btn danger">Block</button></div></div>
+<div id="chatBox" class="chat"></div><div class="row"><input id="messageInput" class="input" placeholder="Message"><button id="sendMsg" class="btn">Send</button></div>
+</section>
 
-drop trigger if exists set_message_sender_trigger on public.messages;
-create trigger set_message_sender_trigger
-before insert on public.messages
-for each row execute function public.set_message_sender();
+<section id="profileScreen" class="hide">
+<div class="card"><div class="row"><div id="myAvatar" class="avatar" style="width:82px;height:82px">AS</div><div><h2 id="myName"></h2><div id="myUsername" class="muted"></div></div></div><p id="myBio"></p><div class="stats"><div class="stat"><b id="pc">0</b>Posts</div><div class="stat"><b id="fc">0</b>Followers</div><div class="stat"><b id="fic">0</b>Following</div></div><button class="btn" onclick="toggleEdit()">Edit Profile</button></div>
+<div id="editProfile" class="card hide"><input id="fullName" class="input" placeholder="Full name"><input id="username" class="input" placeholder="Username"><textarea id="bio" placeholder="Bio"></textarea><input id="avatarFile" class="input" type="file" accept="image/*"><button id="saveProfile" class="btn">Save</button></div>
+<div class="card"><div id="myGrid" class="grid"></div></div>
+</section>
 
--- Likes RLS
-alter table public.likes enable row level security;
+<section id="appealsScreen" class="hide"><div class="card"><h3>Appeals</h3><textarea id="appealText" placeholder="Explain your appeal"></textarea><button id="sendAppeal" class="btn">Submit Appeal</button><div id="appeals"></div></div></section>
+</section></div>
 
-drop policy if exists "likes read" on public.likes;
-create policy "likes read" on public.likes
-for select to authenticated using (true);
+<nav id="nav" class="nav hide">
+<button onclick="showScreen('home')">🏠</button><button onclick="showScreen('reels')">🎬</button><button onclick="showScreen('create')">➕</button><button onclick="showScreen('people')">🔎</button><button onclick="showScreen('messages')">💬</button><button onclick="showScreen('notifications')">🔔</button><button onclick="showScreen('profile')">👤</button>
+</nav>
 
-drop policy if exists "likes insert own" on public.likes;
-create policy "likes insert own" on public.likes
-for insert to authenticated with check (auth.uid() = user_id);
-
-drop policy if exists "likes delete own" on public.likes;
-create policy "likes delete own" on public.likes
-for delete to authenticated using (auth.uid() = user_id);
-
--- Comments RLS
-alter table public.comments enable row level security;
-
-drop policy if exists "comments read" on public.comments;
-create policy "comments read" on public.comments
-for select to authenticated using (true);
-
-drop policy if exists "comments insert own" on public.comments;
-create policy "comments insert own" on public.comments
-for insert to authenticated with check (auth.uid() = user_id);
-
-drop policy if exists "comments delete own" on public.comments;
-create policy "comments delete own" on public.comments
-for delete to authenticated using (auth.uid() = user_id);
-
--- Notification triggers
-create or replace function public.create_follow_notification()
-returns trigger language plpgsql security definer set search_path=public as $$
-begin
-  if new.following_id <> new.follower_id then
-    insert into public.notifications(user_id,actor_id,type)
-    values(new.following_id,new.follower_id,'follow');
-  end if;
-  return new;
-end;
-$$;
-
-drop trigger if exists notify_follow_trigger on public.follows;
-create trigger notify_follow_trigger after insert on public.follows
-for each row execute function public.create_follow_notification();
-
-create or replace function public.create_like_notification()
-returns trigger language plpgsql security definer set search_path=public as $$
-declare post_owner uuid;
-begin
-  select user_id into post_owner from public.posts where id=new.post_id;
-  if post_owner is not null and post_owner <> new.user_id then
-    insert into public.notifications(user_id,actor_id,type,post_id)
-    values(post_owner,new.user_id,'like',new.post_id);
-  end if;
-  return new;
-end;
-$$;
-
-drop trigger if exists notify_like_trigger on public.likes;
-create trigger notify_like_trigger after insert on public.likes
-for each row execute function public.create_like_notification();
-
-create or replace function public.create_comment_notification()
-returns trigger language plpgsql security definer set search_path=public as $$
-declare post_owner uuid;
-begin
-  select user_id into post_owner from public.posts where id=new.post_id;
-  if post_owner is not null and post_owner <> new.user_id then
-    insert into public.notifications(user_id,actor_id,type,post_id)
-    values(post_owner,new.user_id,'comment',new.post_id);
-  end if;
-  return new;
-end;
-$$;
-
-drop trigger if exists notify_comment_trigger on public.comments;
-create trigger notify_comment_trigger after insert on public.comments
-for each row execute function public.create_comment_notification();
-
--- Realtime publication (ignore duplicate-object errors)
-do $$
-begin
-  begin alter publication supabase_realtime add table public.messages; exception when duplicate_object then null; end;
-  begin alter publication supabase_realtime add table public.notifications; exception when duplicate_object then null; end;
-end $$;
+<script>
+let sb=null,me=null,profile=null,chatUser=null,presence=null,chatChannel=null;
+const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const initials=n=>(n||"User").split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+function status(el,t,ok=false){el.textContent=t;el.className=ok?"ok":"err"}
+function av(p){return p?.avatar_url?`<div class="avatar"><img src="${p.avatar_url}"></div>`:`<div class="avatar">${initials(p?.full_name)}</div>`}
+function init(u,k){
+  try{
+    sb=supabase.createClient(u,k);
+    $("setup").classList.add("hide");
+    $("auth").classList.remove("hide");
+    check();
+  }catch(e){
+    $("setup").classList.remove("hide");
+    status($("setupMsg"),"Setup error: "+e.message);
+  }
+}
+$("connect").onclick=()=>{
+  const u=$("url").value.trim(),k=$("key").value.trim();
+  if(!u||!k)return status($("setupMsg"),"Enter URL/key");
+  try{
+    localStorage.setItem("AKOLIAS_URL",u);
+    localStorage.setItem("AKOLIAS_KEY",k);
+    init(u,k);
+  }catch(e){
+    status($("setupMsg"),"Connect error: "+e.message);
+  }
+}
+$("login").onclick=async()=>{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)return status($("authMsg"),error.message);enter(data.user)}
+$("signup").onclick=async()=>{const {data,error}=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value});if(error)return status($("authMsg"),error.message);if(data.session)enter(data.user);else status($("authMsg"),"Signup complete. Confirm email if required.",true)}
+async function check(){const {data}=await sb.auth.getSession();if(data.session)enter(data.session.user)}
+async function enter(u){me=u;$("setup").classList.add("hide");$("auth").classList.add("hide");if($("topAccount"))$("topAccount").textContent=u.email||"Logged in";const {data:m}=await sb.from("user_moderation").select("is_suspended,suspension_reason").eq("user_id",u.id).maybeSingle();if(m?.is_suspended){$("suspended").classList.remove("hide");$("suspendReason").textContent=m.suspension_reason||"Suspended by admin";return}$("main").classList.remove("hide");$("nav").classList.remove("hide");await ensureProfile();await startPresence();await Promise.all([loadHome(),loadStories(),loadReels(),loadPeople(),loadNotifications(),loadProfile(),loadAppeals()]);showScreen("home")}
+$("logoutSusp").onclick=async()=>{await sb.auth.signOut();location.reload()}
+$("logoutBtn").onclick=async()=>{if(presence)await sb.removeChannel(presence);if(chatChannel)await sb.removeChannel(chatChannel);await sb.auth.signOut();location.reload()}
+async function ensureProfile(){const {data}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();if(data){profile=data;return}const base=(me.email||"user").split("@")[0].replace(/[^a-z0-9_]/gi,"").toLowerCase();await sb.from("profiles").insert({id:me.id,full_name:base,username:base+"_"+me.id.slice(0,5)});const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p}
+async function profiles(ids){ids=[...new Set(ids.filter(Boolean))];if(!ids.length)return{};const {data}=await sb.from("profiles").select("id,full_name,username,avatar_url,bio").in("id",ids);return Object.fromEntries((data||[]).map(x=>[x.id,x]))}
+async function startPresence(){presence=sb.channel("online",{config:{presence:{key:me.id}}});presence.on("presence",{event:"sync"},()=>{if(chatUser)updateChatStatus()});await presence.subscribe(async s=>{if(s==="SUBSCRIBED")await presence.track({user_id:me.id,online_at:new Date().toISOString()})})}
+function online(uid){return Object.values(presence?.presenceState?.()||{}).flat().some(x=>x.user_id===uid)}
+function updateChatStatus(){$("chatStatus").textContent=online(chatUser.id)?"Online":"Offline"}
+window.showScreen=n=>{["home","reels","create","people","notifications","messages","chat","profile","appeals"].forEach(x=>$(x+"Screen").classList.toggle("hide",x!==n));if(n==="home")loadHome();if(n==="notifications")loadNotifications();if(n==="messages")loadChatUsers();if(n==="profile")loadProfile()}
+async function loadStories(){const cut=new Date(Date.now()-86400000).toISOString();const {data}=await sb.from("stories").select("*").gte("created_at",cut).order("created_at",{ascending:false});const pm=await profiles((data||[]).map(x=>x.user_id));$("stories").innerHTML=(data||[]).map(s=>`<div class="story">${av(pm[s.user_id])}@${esc(pm[s.user_id]?.username||"user")}</div>`).join("")||"<span class='muted'>No stories</span>"}
+async function loadHome(){const {data:f}=await sb.from("follows").select("following_id").eq("follower_id",me.id);const ids=[me.id,...(f||[]).map(x=>x.following_id)];const {data}=await sb.from("posts").select("*").in("user_id",ids).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.user_id));$("feed").innerHTML=(data||[]).map(p=>{const m=p.media_type==="video"?`<video class="media" src="${p.media_url}" controls></video>`:`<img class="media" src="${p.media_url}">`;return `<article class="card post"><div class="postHead row">${av(pm[p.user_id])}<div><b>${esc(pm[p.user_id]?.full_name||"User")}</b><div class="muted">@${esc(pm[p.user_id]?.username||"user")}</div></div></div>${m}<div class="actions"><button onclick="like('${p.id}',this)">♡</button><button>💬</button></div><div class="caption">${esc(p.caption||"")}</div></article>`}).join("")||"<div class='card muted'>No posts yet.</div>"}
+window.like=async (id,btn)=>{
+  const {data,error:checkError}=await sb.from("likes").select("*").eq("post_id",id).eq("user_id",me.id).maybeSingle();
+  if(checkError){alert("Like error: "+checkError.message);return}
+  if(data){
+    const {error}=await sb.from("likes").delete().eq("post_id",id).eq("user_id",me.id);
+    if(error){alert("Unlike error: "+error.message);return}
+    if(btn)btn.textContent="♡";
+  }else{
+    const {error}=await sb.from("likes").insert({post_id:id,user_id:me.id});
+    if(error){alert("Like error: "+error.message);return}
+    if(btn)btn.textContent="♥";
+  }
+}
+async function loadReels(){const {data}=await sb.from("posts").select("*").eq("media_type","video").order("created_at",{ascending:false}).limit(30);const pm=await profiles((data||[]).map(x=>x.user_id));$("reels").innerHTML=(data||[]).map(p=>`<div class="reel"><video src="${p.media_url}" controls loop playsinline></video><div class="reelText"><b>@${esc(pm[p.user_id]?.username||"user")}</b><p>${esc(p.caption||"")}</p></div></div>`).join("")||"<div class='card muted'>No reels yet.</div>"}
+async function upload(bucket,file){const ext=file.name.split(".").pop(),path=`${me.id}/${Date.now()}.${ext}`;const {error}=await sb.storage.from(bucket).upload(path,file,{contentType:file.type});if(error)throw error;return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
+$("publishPost").onclick=async()=>{try{const f=$("postFile").files[0];if(!f)throw new Error("Choose media");const url=await upload("posts",f);const {error}=await sb.from("posts").insert({user_id:me.id,caption:$("postCaption").value.trim(),media_url:url,media_type:f.type.startsWith("video")?"video":"image"});if(error)throw error;status($("postMsg"),"Published",true);$("postCaption").value="";$("postFile").value="";loadHome()}catch(e){status($("postMsg"),e.message)}}
+$("publishStory").onclick=async()=>{try{const f=$("storyFile").files[0];if(!f)throw new Error("Choose media");const url=await upload("stories",f);const {error}=await sb.from("stories").insert({user_id:me.id,caption:$("storyCaption").value.trim(),media_url:url,media_type:f.type.startsWith("video")?"video":"image"});if(error)throw error;status($("storyMsg"),"Story published",true);loadStories()}catch(e){status($("storyMsg"),e.message)}}
+async function loadPeople(q=""){let x=sb.from("profiles").select("*").neq("id",me.id).limit(50);if(q.trim())x=x.or(`username.ilike.%${q.trim()}%,full_name.ilike.%${q.trim()}%`);const [{data},{data:f}]=await Promise.all([x,sb.from("follows").select("following_id").eq("follower_id",me.id)]);const set=new Set((f||[]).map(x=>x.following_id));$("people").innerHTML=(data||[]).map(u=>`<div class="row between" style="padding:10px 0">${av(u)}<div style="flex:1"><b>${esc(u.full_name)}</b><div class="muted">@${esc(u.username)}</div></div><button class="btn ${set.has(u.id)?"ghost":""}" onclick="follow('${u.id}',${set.has(u.id)})">${set.has(u.id)?"Following":"Follow"}</button><button class="btn ghost" onclick="openChat('${u.id}')">Message</button></div>`).join("")}
+$("peopleSearch").oninput=e=>loadPeople(e.target.value)
+window.follow=async(uid,on)=>{if(on)await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",uid);else await sb.from("follows").insert({follower_id:me.id,following_id:uid});loadPeople($("peopleSearch").value);loadProfile()}
+async function loadNotifications(){const {data}=await sb.from("notifications").select("*").eq("user_id",me.id).order("created_at",{ascending:false}).limit(50);const pm=await profiles((data||[]).map(x=>x.actor_id));$("notifications").innerHTML=(data||[]).map(n=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b>@${esc(pm[n.actor_id]?.username||"user")}</b> ${esc(n.type)} <span class="muted">${new Date(n.created_at).toLocaleString()}</span></div>`).join("")||"<div class='muted'>No notifications</div>"}
+$("markRead").onclick=async()=>{await sb.from("notifications").update({is_read:true}).eq("user_id",me.id);loadNotifications()}
+async function loadChatUsers(){
+  $("messagesStatus").textContent="Loading users...";
+  const {data,error}=await sb.from("profiles").select("*").neq("id",me.id).order("created_at",{ascending:false}).limit(50);
+  if(error){
+    $("messagesStatus").textContent="Could not load users: "+error.message;
+    $("chatUsers").innerHTML="";
+    return;
+  }
+  if(!data || data.length===0){
+    $("messagesStatus").textContent="No other user profile yet. Login once with the second account, then come back here and press Refresh.";
+    $("chatUsers").innerHTML="";
+    return;
+  }
+  $("messagesStatus").textContent=data.length+" user(s) available";
+  $("chatUsers").innerHTML=data.map(u=>`<div class="row between" style="padding:12px 0;border-bottom:1px solid var(--line)">${av(u)}<div style="flex:1"><b>${esc(u.full_name||"User")}</b><div class="muted">@${esc(u.username||"user")}</div></div><button class="btn" onclick="openChat('${u.id}')">Message</button></div>`).join("");
+}
+window.openChat=async uid=>{
+  const {data,error}=await sb.from("profiles").select("*").eq("id",uid).single();
+  if(error||!data){alert("Could not open chat: "+(error?.message||"User not found"));return}
+  chatUser=data;
+  $("chatName").textContent=data.full_name||"User";
+  $("chatAvatar").innerHTML=data.avatar_url?`<img src="${data.avatar_url}">`:initials(data.full_name);
+  updateChatStatus();
+  showScreen("chat");
+  await loadMessages();
+  subscribeChat();
+}
+async function loadMessages(){
+  const a=me.id,b=chatUser.id;
+  const {data,error}=await sb.from("messages").select("*").or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`).order("created_at",{ascending:true});
+  if(error){$("chatBox").innerHTML=`<div class="err">Chat error: ${esc(error.message)}</div>`;return}
+  $("chatBox").innerHTML=(data||[]).map(m=>`<div class="bubble ${m.sender_id===me.id?"mine":"theirs"}">${esc(m.body ?? m.message ?? "")}<div class="muted" style="font-size:10px;margin-top:4px">${m.created_at?new Date(m.created_at).toLocaleString():""}</div></div>`).join("") || `<div class="muted">No messages yet. Send the first message.</div>`;
+  $("chatBox").scrollTop=$("chatBox").scrollHeight;
+}
+async function sendCurrentMessage(){
+  const text=$("messageInput").value.trim();
+  if(!text||!chatUser)return;
+  let {error}=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,body:text});
+  if(error && /body|column/i.test(error.message||"")){
+    const retry=await sb.from("messages").insert({sender_id:me.id,receiver_id:chatUser.id,message:text});
+    error=retry.error;
+  }
+  if(error){alert("Message not sent: "+error.message);return}
+  $("messageInput").value="";
+  await loadMessages();
+}
+$("sendMsg").onclick=sendCurrentMessage;
+$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendCurrentMessage()}})
+function subscribeChat(){
+  if(chatChannel) sb.removeChannel(chatChannel);
+  chatChannel=sb.channel("chat-"+me.id)
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},payload=>{
+      const m=payload.new;
+      if(chatUser&&(
+        (m.sender_id===me.id&&m.receiver_id===chatUser.id)||
+        (m.sender_id===chatUser.id&&m.receiver_id===me.id)
+      )) loadMessages();
+    })
+    .subscribe();
+}
+$("blockBtn").onclick=async()=>{if(!chatUser)return;await sb.from("blocks").insert({blocker_id:me.id,blocked_id:chatUser.id});alert("Blocked");showScreen("people");loadPeople()}
+$("reportBtn").onclick=async()=>{const reason=prompt("Report reason:","spam");if(!reason)return;const {error}=await sb.from("reports").insert({reporter_id:me.id,reported_user_id:chatUser.id,reason,details:"Reported from chat"});alert(error?error.message:"Report submitted")}
+async function loadProfile(){const {data:p}=await sb.from("profiles").select("*").eq("id",me.id).single();profile=p;$("myName").textContent=p.full_name;$("myUsername").textContent="@"+p.username;$("myBio").textContent=p.bio||"";$("fullName").value=p.full_name||"";$("username").value=p.username||"";$("bio").value=p.bio||"";$("myAvatar").innerHTML=p.avatar_url?`<img src="${p.avatar_url}">`:initials(p.full_name);const [a,b,c,d]=await Promise.all([sb.from("posts").select("*",{count:"exact",head:true}).eq("user_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",me.id),sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",me.id),sb.from("posts").select("*").eq("user_id",me.id).order("created_at",{ascending:false})]);$("pc").textContent=a.count||0;$("fc").textContent=b.count||0;$("fic").textContent=c.count||0;$("myGrid").innerHTML=(d.data||[]).map(x=>`<div class="tile">${x.media_type==="video"?`<video src="${x.media_url}" muted></video>`:`<img src="${x.media_url}">`}</div>`).join("")}
+window.toggleEdit=()=>$("editProfile").classList.toggle("hide")
+$("saveProfile").onclick=async()=>{try{let avatar_url=profile.avatar_url;const f=$("avatarFile").files[0];if(f)avatar_url=await upload("avatars",f);const username=$("username").value.trim().toLowerCase().replace(/[^a-z0-9_.]/g,"");const {error}=await sb.from("profiles").update({full_name:$("fullName").value.trim(),username,bio:$("bio").value.trim(),avatar_url}).eq("id",me.id);if(error)throw error;await loadProfile();$("editProfile").classList.add("hide")}catch(e){alert(e.message)}}
+$("sendAppeal").onclick=async()=>{const message=$("appealText").value.trim();if(message.length<10)return alert("Write at least 10 characters");const {error}=await sb.from("appeals").insert({user_id:me.id,message});if(error)return alert(error.message);$("appealText").value="";loadAppeals()}
+async function loadAppeals(){const {data}=await sb.from("appeals").select("*").eq("user_id",me.id).order("created_at",{ascending:false});$("appeals").innerHTML=(data||[]).map(a=>`<div class="card"><b>${esc(a.status)}</b><p>${esc(a.message)}</p><div class="muted">${esc(a.admin_note||"")}</div></div>`).join("")}
+const u="https://mhjtlxxgeepmbxeoravu.supabase.co",k="sb_publishable_gHUxa_Mrg3UKzhjq9Rr30g_45Mqfex6";
+$("url").value=u;
+$("key").value=k;
+localStorage.setItem("AKOLIAS_URL",u);
+localStorage.setItem("AKOLIAS_KEY",k);
+init(u,k);
+</script><div style="position:fixed;left:8px;bottom:4px;color:#596274;font:10px Arial;z-index:1">Akolias Social Final</div></body></html>
